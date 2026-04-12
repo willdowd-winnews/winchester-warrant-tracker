@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>2026 Town Meeting Warrant Tracker — Winchester News</title>
+<meta name="description" content="An interactive tracker for all 46 warrant articles at Winchester's 2026 Spring Annual Representative Town Meeting.">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --navy: #1B3A5C;
+    --gold: #B8860B;
+    --black: #1E1F21;
+    --white: #FFF5EE;
+    --font: Georgia, 'Times New Roman', serif;
+    --bg-card: #FFF5EE;
+    --bg-card-hover: #FCEEE5;
+    --bg-expanded: #F9E8DD;
+    --border: #E8E2D9;
+    --text-secondary: #4A4A4A;
+    --text-muted: #6B655C;
+    --accent-light: #EBF0F7;
+    --navy-light: #EBF0F7;
+    --navy-mid: #C5D3E8;
+    --gold-light: #FDF6E3;
+  }
+
+  body {
+    font-family: var(--font);
+    background: var(--white);
+    color: var(--black);
+    padding: 24px 20px;
+    max-width: 960px;
+    margin: 0 auto;
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    line-height: 1.4;
+    overflow-x: hidden;
+  }
+
+  /* -- Masthead -- */
+  .masthead-top-wrap { text-align: center; margin-bottom: 6px; }
+  .masthead-kicker { font-size: 13px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--navy); margin-bottom: 6px; }
+  .masthead-title { font-size: 38px; font-weight: 700; color: var(--black); line-height: 1.15; letter-spacing: -0.5px; }
+  .masthead-date { font-size: 14px; color: var(--text-secondary); margin-top: 8px; font-style: italic; }
+  .masthead-byline { font-size: 11px; color: var(--black); font-weight: 700; text-align: center; margin-bottom: 18px; letter-spacing: 1.5px; }
+
+  /* -- Header -- */
+  .header { border-bottom: 2px solid var(--black); padding-bottom: 14px; margin-bottom: 20px; }
+  .header-kicker { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--navy); margin-bottom: 6px; }
+  .header h1 { font-size: 28px; font-weight: 700; line-height: 1.2; color: var(--black); }
+  .header-sub { font-size: 14px; color: var(--text-secondary); margin-top: 8px; font-style: italic; line-height: 1.5; }
+
+  /* -- RTM callout -- */
+  .rtm-callout {
+    margin-bottom: 20px; padding: 14px 16px; background: var(--accent-light);
+    border-radius: 4px; border: 1px solid var(--navy-mid); border-left: 4px solid var(--navy);
+  }
+  .rtm-kicker { font-size: 10px; font-weight: 700; color: var(--navy); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1.5px; }
+  .rtm-body { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+  .rtm-body strong { color: var(--black); }
+
+  /* -- Stats -- */
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+  .stat-card { background: var(--bg-card); border-radius: 4px; padding: 12px 10px; text-align: center; border: 1px solid var(--border); }
+  .stat-value { font-size: 26px; font-weight: 700; line-height: 1; }
+  .stat-label { font-size: 10px; color: var(--text-muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.8px; }
+
+  /* -- Filters -- */
+  .filters { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; align-items: center; }
+  .filters input[type="text"] {
+    padding: 8px 12px; font-family: var(--font); font-size: 16px; font-style: italic;
+    border: 1px solid var(--border); border-radius: 4px; flex: 1; min-width: 140px;
+    outline: none; background: var(--bg-card); color: var(--black);
+    -webkit-appearance: none; appearance: none;
+  }
+  .filters select {
+    padding: 8px 10px; font-family: var(--font); font-size: 16px;
+    border: 1px solid var(--border); border-radius: 4px; background: var(--bg-card);
+    color: var(--black); cursor: pointer; outline: none;
+    -webkit-appearance: none; appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B655C' fill='none' stroke-width='1.5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 28px;
+  }
+  .filter-count { font-size: 11px; color: var(--text-muted); margin-left: auto; text-align: right; }
+
+  /* -- Legend -- */
+  .legend { display: flex; gap: 14px; margin-bottom: 14px; font-size: 11px; color: var(--text-muted); flex-wrap: wrap; align-items: center; }
+  .legend-title { font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+  .legend-item { display: flex; align-items: center; gap: 5px; }
+  .legend-bar { width: 14px; height: 3px; display: inline-block; border-radius: 1px; }
+
+  /* -- Desktop table (961px+) -- */
+  .table-wrap { border: 1px solid var(--border); border-radius: 4px; overflow: hidden; background: var(--bg-card); }
+
+  .col-header {
+    display: grid; grid-template-columns: 50px 1fr 120px 90px 120px 120px 110px;
+    padding: 8px 14px; background: var(--black);
+    font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.8px; color: #FFFFFF; gap: 10px;
+    align-items: center;
+  }
+  .col-header div { text-align: center; line-height: 1.3; }
+
+  .article-row { border-bottom: 1px solid var(--border); transition: background 0.15s ease; }
+  .article-row.expanded { background: var(--bg-expanded); }
+
+  .article-row-main {
+    display: grid; grid-template-columns: 50px 1fr 120px 90px 120px 120px 110px;
+    align-items: center; padding: 11px 14px; gap: 10px;
+  }
+  .article-row-main.clickable { cursor: pointer; }
+  .article-row-main.clickable:hover { background: var(--bg-card-hover); }
+
+  .art-num { font-size: 22px; font-weight: 700; text-align: center; line-height: 1; color: var(--black); }
+  .art-num.high { color: var(--navy); }
+  .art-title { font-size: 15px; font-weight: 700; color: var(--black); line-height: 1.35; padding-left: 6px; }
+  .art-expand-hint { margin-left: 5px; font-size: 11px; color: var(--text-muted); font-weight: 400; }
+  .art-key { font-size: 12px; color: var(--text-secondary); margin-top: 2px; font-style: italic; padding-left: 6px; }
+
+  .cat-cell { text-align: center; }
+  .cat-badge {
+    display: inline-block; font-size: 10px; font-weight: 700;
+    padding: 3px 8px; border-radius: 3px; letter-spacing: 0.3px; text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .vote-cell { font-size: 11px; color: var(--text-secondary); text-align: center; }
+  .vote-super { font-weight: 700; }
+
+  .rec-cell, .result-cell { font-size: 11px; text-align: center; }
+
+  .rec-badge, .result-badge {
+    display: inline-block; font-size: 10px; font-weight: 700;
+    padding: 3px 10px; border-radius: 3px; letter-spacing: 0.2px; text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .rec-badge.favorable { background: #E8F5E9; color: #2E7D32; border: 1px solid #A5D6A7; }
+  .rec-badge.unfavorable { background: #FFEBEE; color: #C62828; border: 1px solid #EF9A9A; }
+  .rec-badge.no-action { background: #F0EDE8; color: var(--text-secondary); border: 1px solid var(--border); }
+  .rec-badge.pending { background: #FFF8E1; color: #8D6E00; border: 1px solid #FFE082; }
+  .rec-badge.split { background: #FFF3E0; color: #BF6900; border: 1px solid #FFCC80; }
+
+  .result-badge.passed { background: #E8F5E9; color: #2E7D32; border: 1px solid #A5D6A7; }
+  .result-badge.failed { background: #FFEBEE; color: #C62828; border: 1px solid #EF9A9A; }
+  .result-badge.tbd { background: #F0EDE8; color: var(--text-muted); border: 1px solid var(--border); }
+  .result-badge.amended { background: #EBF0F7; color: var(--navy); border: 1px solid var(--navy-mid); }
+  .result-badge.withdrawn { background: #F0EDE8; color: var(--text-secondary); border: 1px solid var(--border); }
+
+  /* -- Expanded detail -- */
+  .art-detail {
+    padding: 0 16px 14px 76px; font-size: 14px;
+    color: var(--text-secondary); line-height: 1.6; border-top: 1px solid var(--border);
+  }
+  .art-detail-text { margin-top: 10px; }
+  .art-detail-amount { font-size: 15px; color: var(--navy); margin-bottom: 10px; padding: 8px 12px; background: var(--accent-light); border-left: 3px solid var(--navy); }
+  .art-detail-sponsor {
+    margin-top: 8px; font-size: 11px;
+    color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;
+  }
+
+  .empty-state { padding: 36px; text-align: center; color: var(--text-muted); font-size: 14px; font-style: italic; }
+
+  /* -- Budget callout -- */
+  .budget-callout {
+    margin-top: 18px; padding: 14px 16px; background: var(--bg-card);
+    border-radius: 4px; border: 1px solid var(--border); border-left: 4px solid var(--navy);
+  }
+  .budget-kicker { font-size: 10px; font-weight: 700; color: var(--navy); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1.5px; }
+  .budget-body { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
+  .budget-body strong { color: var(--black); }
+  .budget-body .navy { color: var(--navy); }
+
+  /* -- Badge key -- */
+  .key-callout { margin-top: 8px; padding: 6px 12px; background: var(--bg-card); border-radius: 4px; border: 1px solid var(--border); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .key-callout-title { font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1.5px; white-space: nowrap; }
+  .key-grid { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+  .key-grid .rec-badge, .key-grid .result-badge { font-size: 9px; }
+
+  /* -- Source -- */
+  .source-line { font-size: 10px; color: var(--text-muted); margin-top: 14px; text-align: center; letter-spacing: 0.3px; line-height: 1.5; }
+
+  /* -- Footer nameplate -- */
+  .footer-nameplate { text-align: center; margin-top: 20px; margin-bottom: 10px; }
+  .footer-nameplate .fn-top { font-size: 36px; color: var(--black); letter-spacing: 0.5px; }
+  .footer-nameplate .fn-bottom { font-size: 44px; font-weight: 800; color: var(--navy); letter-spacing: 3px; text-transform: uppercase; line-height: 1; }
+
+  /* -- Mobile badge row (hidden by default) -- */
+  .mobile-badges { display: none; }
+
+  /* =========== PHONE PORTRAIT <= 680px =========== */
+  @media (max-width: 680px) {
+    body { padding: 14px 10px; }
+    .masthead-kicker { font-size: 10px; letter-spacing: 2px; }
+    .masthead-title { font-size: 26px; }
+    .masthead-date { font-size: 12px; }
+    .masthead-byline { font-size: 10px; letter-spacing: 1px; margin-bottom: 14px; }
+    .header h1 { font-size: 22px; }
+    .header-sub { font-size: 13px; }
+    .stats { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+    .stat-value { font-size: 22px; }
+    .stat-label { font-size: 9px; }
+    .stat-card { padding: 10px 6px; }
+    .filters { flex-direction: column; gap: 6px; }
+    .filters input[type="text"] { width: 100%; min-width: 0; font-size: 16px; padding: 10px 12px; }
+    .filters select { width: 100%; font-size: 16px; padding: 10px 12px; }
+    .filter-count { margin-left: 0; text-align: left; width: 100%; }
+    .legend { gap: 10px; font-size: 10px; }
+    .col-header { display: none; }
+    .table-wrap { border: none; border-radius: 0; background: transparent; }
+    .article-row {
+      border-bottom: none; margin-bottom: 8px; border-radius: 6px;
+      border: 1px solid var(--border); overflow: hidden; background: var(--bg-card);
+    }
+    .article-row-main {
+      display: grid; grid-template-columns: 42px 1fr;
+      grid-template-rows: auto auto; padding: 12px; gap: 2px 10px;
+    }
+    .art-num { font-size: 20px; grid-row: 1 / 3; align-self: start; padding-top: 2px; }
+    .art-title-wrap { grid-column: 2; }
+    .art-title { font-size: 14px; padding-left: 0; }
+    .art-key { font-size: 11px; padding-left: 0; }
+    .cat-cell, .vote-cell-wrap, .sb-rec-cell-wrap, .rec-cell-wrap, .result-cell-wrap { display: none; }
+    .mobile-badges {
+      display: flex; gap: 5px; flex-wrap: wrap; align-items: center;
+      grid-column: 2; margin-top: 6px;
+    }
+    .mobile-badges .cat-badge { font-size: 9px; padding: 2px 6px; }
+    .mobile-badges .vote-tag { font-size: 9px; color: var(--text-secondary); font-style: italic; }
+    .mobile-badges .vote-tag.super { color: var(--navy); font-weight: 700; font-style: normal; }
+    .mobile-badges .rec-badge, .mobile-badges .result-badge { font-size: 9px; padding: 2px 6px; }
+    .art-detail { padding: 10px 12px 14px 12px; font-size: 13px; }
+    .art-detail-amount { font-size: 15px; color: var(--navy); margin-bottom: 10px; padding: 8px 12px; background: var(--accent-light); border-left: 3px solid var(--navy); }
+  .art-detail-sponsor { font-size: 10px; }
+    .budget-callout { padding: 12px; }
+    .budget-body { font-size: 13px; }
+    .key-callout { padding: 5px 10px; gap: 6px; }
+    .key-grid { gap: 4px; }
+    .source-line { font-size: 9px; }
+    .footer-nameplate .fn-top { font-size: 24px; }
+    .footer-nameplate .fn-bottom { font-size: 30px; letter-spacing: 2px; }
+  }
+
+  @media (min-width: 376px) and (max-width: 680px) {
+    .stats { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  /* =========== TABLET 681-960px =========== */
+  @media (min-width: 681px) and (max-width: 960px) {
+    body { padding: 20px 16px; }
+    .masthead-title { font-size: 32px; }
+    .col-header, .article-row-main {
+      grid-template-columns: 50px 1fr 120px 110px 110px 100px; gap: 10px;
+      padding-left: 12px; padding-right: 12px;
+    }
+    .vote-cell-wrap { display: none; }
+    .col-header div:nth-child(4) { display: none; }
+    .art-num { font-size: 20px; }
+    .art-title { font-size: 14px; }
+    .art-key { font-size: 11px; }
+    .art-detail { padding-left: 68px; font-size: 13px; }
+    .footer-nameplate .fn-top { font-size: 28px; }
+    .footer-nameplate .fn-bottom { font-size: 36px; }
+  }
+
+  /* =========== LANDSCAPE =========== */
+  @media (max-height: 500px) and (orientation: landscape) {
+    body { padding: 10px 16px; }
+    .masthead-top-wrap { margin-bottom: 4px; }
+    .masthead-title { font-size: 24px; }
+    .masthead-date { font-size: 11px; margin-top: 4px; }
+    .masthead-byline { margin-bottom: 10px; }
+    .header { padding-bottom: 8px; margin-bottom: 12px; }
+    .header h1 { font-size: 20px; }
+    .stats { gap: 6px; margin-bottom: 12px; }
+    .stat-card { padding: 8px 6px; }
+    .stat-value { font-size: 20px; }
+    .budget-callout { padding: 10px 12px; }
+    .budget-body { font-size: 12px; }
+  }
+
+  /* =========== SAFE AREA =========== */
+  @supports (padding: env(safe-area-inset-left)) {
+    body {
+      padding-left: max(20px, env(safe-area-inset-left));
+      padding-right: max(20px, env(safe-area-inset-right));
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    @media (max-width: 680px) {
+      body {
+        padding-left: max(10px, env(safe-area-inset-left));
+        padding-right: max(10px, env(safe-area-inset-right));
+      }
+    }
+  }
+
+  /* =========== TOUCH =========== */
+  @media (pointer: coarse) {
+    .article-row-main.clickable { min-height: 52px; }
+    .filters input[type="text"], .filters select { min-height: 44px; font-size: 16px; }
+  }
+
+  /* =========== PRINT =========== */
+  @media print {
+    body { background: #FFF5EE; padding: 0; }
+    .filters, .legend { display: none; }
+    .article-row { break-inside: avoid; }
+    .footer-nameplate { margin-top: 30px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Winchester News nameplate -->
+<div class="nameplate-wrap" style="background:#FFF5EE; text-align:center; padding:24px 20px 18px; margin-bottom:0; border-bottom:none;">
+  <a href="https://winchesternews.org" target="_blank" rel="noopener" style="text-decoration:none; display:inline-block; cursor:pointer;">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 190" style="max-width:680px; width:100%; height:auto;">
+    <!-- Overlapping squares logo -->
+    <rect x="40" y="20" width="80" height="80" rx="2" fill="none" stroke="#3A7A4F" stroke-width="6"/>
+    <rect x="70" y="50" width="80" height="80" rx="2" fill="none" stroke="#3A7A4F" stroke-width="6"/>
+    <!-- Fill overlap zone with shell white to show overlap -->
+    <rect x="73" y="53" width="44" height="44" fill="#FFF5EE"/>
+    <rect x="70" y="50" width="47" height="47" rx="2" fill="none" stroke="#3A7A4F" stroke-width="6"/>
+    <rect x="40" y="20" width="80" height="80" rx="2" fill="none" stroke="#3A7A4F" stroke-width="6"/>
+    <!-- WINCHESTER NEWS text -->
+    <text x="175" y="62" font-family="Georgia, 'Times New Roman', serif" font-size="52" font-weight="400" fill="#1E3A2A" letter-spacing="4">WINCHESTER</text>
+    <text x="175" y="118" font-family="Georgia, 'Times New Roman', serif" font-size="52" font-weight="400" fill="#1E3A2A" letter-spacing="4">NEWS</text>
+    <!-- Tagline -->
+    <text x="175" y="155" font-family="'Helvetica Neue', Arial, sans-serif" font-size="18" font-weight="400" fill="#2563B0" letter-spacing="3">A TRUSTED AND RELIABLE SOURCE OF LOCAL NEWS</text>
+  </svg>
+  </a>
+</div>
+
+<div class="masthead-top-wrap">
+  <div class="masthead-title">2026 Spring Annual<br>Town Meeting Warrant</div>
+  <div class="masthead-date">Monday, April 27 &middot; 7 p.m. &middot; Winchester High School Auditorium, 80 Skillings Road</div>
+</div>
+<div class="masthead-byline">BY WILL DOWD</div>
+
+<div class="header" style="border-bottom: 2px solid var(--black); padding-bottom: 14px; margin-bottom: 20px;">
+  <div class="header-kicker">Interactive tracker</div>
+  <h1>All 46 warrant articles, explained</h1>
+  <p class="header-sub">Tap any article to see what it does, who sponsors it and why it matters. This tracker will be updated in real time before, during and after Town Meeting &mdash; bookmark it and check back.</p>
+</div>
+
+<div style="background:#FDF6E3;border:1px solid #FFE082;border-left:4px solid var(--gold);padding:12px 16px;margin-bottom:18px;font-size:14px;color:#5A4D35;text-align:center;line-height:1.5"><strong>Draft motion book figures (April 10, 2026):</strong> Dollar amounts shown are from an advance copy of the Select Board's motion book and are subject to change before and during Town Meeting.</div>
+
+
+
+<div style="margin:0 0 20px; padding:14px 16px; background:var(--bg-card-hover); border:1px solid var(--border); border-left:4px solid var(--gold); font-size:14px; line-height:1.6; color:var(--text-secondary);">
+  Support the reporting behind this tracker. Winchester News is free, independent and powered entirely by readers. <a href="https://winchesternews.org/donate/" target="_blank" rel="noopener" style="color:var(--navy); font-weight:700; text-decoration:underline;">Make a donation</a> to keep local journalism going.
+</div>
+
+<div class="rtm-callout">
+  <div class="rtm-kicker">Representative Town Meeting</div>
+  <div class="rtm-body">
+    Winchester uses a <strong>Representative Town Meeting</strong> &mdash; not an open town meeting. Only <strong>192 elected Town Meeting members</strong>, divided equally among eight precincts (24 per precinct), may make motions and vote. Any resident may attend and speak but may not vote. A quorum of <strong>100 members</strong> is required. The budget arrives against the backdrop of a <strong>failed $11.5 million Proposition 2&frac12; override</strong> on March 21 and a projected <strong>$5.1 million deficit</strong> closed through cuts, new revenue and about <strong>$3.6 million in free cash</strong>.
+  </div>
+</div>
+
+<div class="stats" id="stats"></div>
+
+<div class="key-callout">
+  <div class="key-callout-title">Badge key:</div>
+  <div class="key-grid">
+    <span class="rec-badge favorable">Favorable</span>
+    <span class="rec-badge unfavorable">Unfavorable</span>
+    <span class="rec-badge no-action">No action</span>
+    <span class="rec-badge pending">Pending</span>
+    <span style="display:inline-block;width:8px"></span>
+    <span class="result-badge passed">Passed</span>
+    <span class="result-badge failed">Failed</span>
+    <span class="result-badge amended">Amended</span>
+    <span class="result-badge withdrawn">Withdrawn</span>
+    <span class="result-badge tbd">TBD</span>
+  </div>
+</div>
+
+<div style="margin-bottom:10px"></div>
+
+<div class="filters">
+  <input type="text" id="search" placeholder="Search articles...">
+  <select id="catFilter"><option value="all" selected>All categories</option></select>
+  <select id="stakesFilter">
+    <option value="all" selected>All stakes</option>
+    <option value="high">High stakes only</option>
+    <option value="medium">Notable</option>
+    <option value="low">Routine</option>
+  </select>
+  <div class="filter-count" id="filterCount"></div>
+</div>
+
+<div class="legend">
+  <span class="legend-title">Border key:</span>
+  <span class="legend-item"><span class="legend-bar" style="background:#1B3A5C"></span> High stakes</span>
+  <span class="legend-item"><span class="legend-bar" style="background:#B8860B"></span> Notable</span>
+  <span class="legend-item"><span class="legend-bar" style="background:#E8E2D9"></span> Routine</span>
+</div>
+
+<div class="table-wrap">
+  <div class="col-header">
+    <div>Article</div>
+    <div>Title / key detail</div>
+    <div>Category</div>
+    <div>Vote<br>required</div>
+    <div>Select Board<br>rec.</div>
+    <div>FinCom<br>rec.</div>
+    <div>Town Meeting<br>vote</div>
+  </div>
+  <div id="articleList"></div>
+</div>
+
+<div class="budget-callout">
+  <div class="budget-kicker">Post-override budget context</div>
+  <div class="budget-body">
+    Voters rejected an <strong class="navy">$11.5 million Proposition 2&frac12; override</strong> on March 21. The fiscal year 2027 budget (Article 29) closes the resulting gap with about <strong>$750,000</strong> in municipal cuts, <strong>$950,000</strong> in school-side reductions, roughly <strong>$1 million</strong> in new revenue assumptions and a <strong class="navy">$3.6 million draw on free cash</strong> &mdash; a one-time reserve that must be replenished. Comptroller Stacie A. Ward has cautioned that reserves will be tight. The Select Board is signaling a possible <strong>November override</strong> question and has directed staff to explore additional fee increases and service restructuring.
+  </div>
+</div>
+
+<div class="source-line">
+  Source: 2026 Spring Annual Town Meeting Warrant &middot; Select Board meetings of March 30 and April 6, 2026 &middot; town manager reports &middot; Winchester Home Rule Charter
+</div>
+
+
+<script>
+const articles = [
+  { num: 1, title: "Town reports", cat: "Procedural", sponsor: "Select Board", vote: "Majority", key: "Annual reports received", stakes: "low", note: "Standard opener. Town Meeting hears and acts upon the reports of Town Officials, Boards, Committees and Commissions. No debate expected.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "" },
+  { num: 2, title: "Declare vacant seats", cat: "Procedural", sponsor: "Committee on Rules", vote: "Majority", key: "Members who missed 50 percent or more of sessions", stakes: "low", note: "Under Article 2, Section 2.5(c) of the Home Rule Charter and Section 4.4.3 of the Code of Bylaws, Town Meeting votes to declare vacant the seats of members who failed to attend at least half of the sessions during the previous 12-month period (Spring 2024 and Fall 2024). The vacancies are then filled by precinct election.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "Indefinitely postponed" },
+  { num: 3, title: "Planning Board reports", cat: "Procedural", sponsor: "Planning Board", vote: "Majority", key: "Annual report placed on file", stakes: "low", note: "Town Meeting hears the Planning Board\u2019s annual report and places it on file. No action required beyond acknowledgment.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "" },
+  { num: 4, title: "Human Rights Commission bylaw", cat: "Bylaw", sponsor: "Select Board", vote: "Majority", key: "Establishes nine-member commission", stakes: "medium", note: "Would amend the Code of Bylaws to create a Human Rights Commission as permitted by the Home Rule Charter. The commission would have nine members \u2014 four residents (including liaisons to the Council on Aging and Disability Access Commission), two student members, a town manager designee, a police designee and a Schools Department representative. Duties include advocacy, education, policy review and serving as a liaison to the Massachusetts Commission Against Discrimination. Members would serve staggered three-year terms. The Select Board and School Committee share appointment authority.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "" },
+  { num: 5, title: "Town Meeting rules of procedure", cat: "Governance", sponsor: "Special Town Meeting Committee", vote: "Majority", key: "Updates parliamentary authority, adds consent agenda", stakes: "medium", note: "A significant procedural overhaul recommended by the Special Town Meeting Committee and Committee on Rules. Key changes:\n\u2014 Replaces Robert\u2019s Rules of Order with \u201cTown Meeting Time, A Handbook of Parliamentary Law, 4th edition\u201d as the governing parliamentary authority\n\u2014 Creates an Assistant Moderator role appointed before each meeting\n\u2014 Adds a new \u201cMove the Vote\u201d procedure requiring a two-thirds vote to close debate\n\u2014 Establishes a Consent Agenda allowing routine articles to be voted as a single unit (any article may be removed by the Moderator or five Town Meeting members)\n\u2014 Requires the town manager\u2019s office to deliver main motions, reports and the Consent Agenda at least seven days before the first session\n\u2014 Mandates electronic voting with public display of results", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "" },
+  { num: 6, title: "Amend CH6 bylaws for Board of Health fee", cat: "Bylaw", sponsor: "Board of Health", vote: "Majority", key: "Permit fees for recreational camps for children", stakes: "low", note: "Would add Section 6-7 to the bylaws authorizing the Board of Health to create and set permit fees for recreational camps for children in Winchester. Permits would expire Dec. 31 of the year of issue. A straightforward regulatory tool giving the Board of Health fee-setting authority it does not currently have.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "" },
+  { num: 7, title: "Local occupancy excise tax", cat: "Revenue", sponsor: "Select Board", vote: "Majority", key: "6 percent tax on room rentals", stakes: "medium", note: "Would impose a local room occupancy excise tax at 6 percent \u2014 the maximum rate allowed under G.L. Chapter 64G, Section 3A \u2014 on top of the existing state tax. This is a new revenue source for Winchester. The warrant materials do not include a revenue estimate or identify the base of taxable lodging in town, so members should listen for those figures during debate. The tax would apply to hotels, motels, bed-and-breakfasts and short-term rentals.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "" },
+  { num: 8, title: "Water and sewer rates", cat: "Revenue", sponsor: "Select Board", vote: "Majority", key: "7 percent annual increase through FY31", stakes: "medium", note: "Would set water and sewer rates for FY27 in accordance with Chapter 7, Section 3 of the Code of Bylaws. The Select Board voted March 30 to approve a 7 percent annual increase through fiscal year 2031. Under this plan, the average residential quarterly bill (based on 29 hundred cubic feet) rises from $267.61 to $283.89 \u2014 about $16 per quarter. The preliminary FY27 water and sewer budget totals $15.53 million, with MWRA capital assessments ($4.64 million, up 8.8 percent) as the single largest cost driver.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "" },
+  { num: 9, title: "Prior year bills", cat: "Finance", sponsor: "Town Manager", vote: "Nine-tenths", key: "Transfer from free cash for prior-year invoices", stakes: "low", note: "Massachusetts law prohibits municipalities from paying prior fiscal year invoices out of the current budget. Town Meeting must separately appropriate the funds at a nine-tenths supermajority. The specific dollar amount will be set in the main motion at Town Meeting. This is routine housekeeping.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "" },
+  { num: 10, title: "PEG access and cable related fund", cat: "Finance", sponsor: "Town Manager", vote: "Majority", key: "Funds public/educational/government cable programming", stakes: "low", note: "Would appropriate money from the PEG Access and Cable Related Fund for public, educational and government access programming, franchise compliance monitoring and preparation for cable franchise license renewal, including expert and legal services. Amount to be set at Town Meeting.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "$206,864.70" },
+  { num: 11, title: "Parking initiatives", cat: "Finance", sponsor: "Town Manager", vote: "Majority", key: "Parking Meter Fund for Wedgemere and downtown", stakes: "low", note: "Would appropriate money from the Parking Meter Fund for parking meter equipment, lot maintenance and enforcement costs at the Wedgemere and downtown parking lots. Amount to be set at Town Meeting.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "$29,000 ($8,000 Town Center + $21,000 Wedgemere)" },
+  { num: 12, title: "FY26 General Fund supplemental budget", cat: "Finance", sponsor: "Finance Committee / Town Manager", vote: "Majority", key: "Adjusts current-year appropriations", stakes: "low", note: "Would transfer from free cash or other available funds to supplement or reduce appropriations previously voted for fiscal year 2026 budgets. These mid-year adjustments are common when departments run over or under their original budgets. Amount to be set at Town Meeting.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "$928,081 across seven motions ($261,488 snow/ice personal services, $307,593 snow/ice expense, $143,000 energy, $117,000 fire dept., $20,000 Medicare tax, $5,000 comptroller, $74,000 reserve fund)" },
+  { num: 13, title: "FY26 Water and Sewer supplemental budget", cat: "Finance", sponsor: "Finance Committee / Town Manager", vote: "Majority", key: "Adjusts current-year W&S appropriations", stakes: "low", note: "Would transfer from Water and Sewer Retained Earnings or other available funds to supplement or reduce FY26 water and sewer budget appropriations. Amount to be set at Town Meeting.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "Indefinitely postponed" },
+  { num: 14, title: "FY26 Recreation supplemental budget", cat: "Finance", sponsor: "Finance Committee / Town Manager", vote: "Majority", key: "Adjusts current-year Recreation appropriations", stakes: "low", note: "Would transfer from Recreation Retained Earnings or other available funds to supplement or reduce FY26 Recreation Department budget appropriations. Amount to be set at Town Meeting.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "Indefinitely postponed" },
+  { num: 15, title: "General Stabilization Fund", cat: "Finance", sponsor: "Select Board", vote: "Two-thirds", key: "Rainy-day reserve deposit", stakes: "medium", note: "Would raise and appropriate or transfer from available funds a sum to be deposited into the General Stabilization Fund \u2014 the town\u2019s rainy-day reserve. A two-thirds vote is required for any stabilization fund action. Given the budget pressure and heavy free cash reliance this year, the size of any deposit (if any) will signal how the town prioritizes reserves vs. immediate spending needs.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "$2,000,000 from free cash" },
+  { num: 16, title: "Solar panel acquisitions", cat: "Capital", sponsor: "Select Board / School Committee", vote: "Two-thirds", key: "Panels on WHS, McCall, Vinson-Owen, DPW, Transfer Station", stakes: "high", note: "Would fund acquisition and installation of solar panels on five town and school buildings: Winchester High School (80 Skillings Road), McCall Middle School (458 Main Street), Vinson-Owen Elementary (75 Johnson Road), the Department of Public Works (15 Lake Street) and the Transfer Station (15 McKay Avenue). Funding may come through borrowing, free cash or other available funds. Two-thirds vote required because borrowing is anticipated. A significant capital investment in renewable energy infrastructure across the town\u2019s portfolio.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "$7,943,000 (borrowing)" },
+  { num: 17, title: "Capital Planning Committee report", cat: "Procedural", sponsor: "Capital Planning Committee", vote: "Majority", key: "Revised FY27 capital plan", stakes: "low", note: "Town Meeting hears the Capital Planning Committee\u2019s report on the revised Capital Plan for FY27 and places it on file. The report provides the framework for the capital articles that follow.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "" },
+  { num: 18, title: "Capital close-outs", cat: "Finance", sponsor: "Capital Planning Committee", vote: "Two-thirds", key: "Returns unspent capital funds to reserves", stakes: "low", note: "Would transfer unexpended capital account balances from completed projects to the Capital Stabilization Fund or Building Stabilization Fund established under Chapter 69 of the Acts of 2002. Standard housekeeping that returns unused borrowing or appropriation balances to reserves.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "$905,020.28 total ($810,929.17 to Building Stabilization Fund + $94,091.11 to Capital Stabilization Fund)" },
+  { num: 19, title: "FY27 capital projects", cat: "Capital", sponsor: "Capital Planning Committee", vote: "Majority", key: "ADA Transition Plan, MS4 Permitting, Everett Ave. drainage", stakes: "medium", note: "Would fund three capital projects effective July 1, 2026:\n\u2014 ADA Transition Plan\n\u2014 MS4 Permitting (federal stormwater permit compliance)\n\u2014 Everett Avenue Area Drainage \u2014 Engineering\nFunding sources may include the Building Stabilization Fund, Capital Stabilization Fund, Water & Sewer Retained Earnings, Recreation Retained Earnings, Cemetery Perpetual Care Fund, free cash or other available funds. Amounts to be set at Town Meeting.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "$325,000 ($125,000 ADA + $150,000 MS4 + $50,000 Everett Ave. drainage)" },
+  { num: 20, title: "Rescind borrowing authorizations", cat: "Finance", sponsor: "Capital Planning Committee", vote: "Majority", key: "Retires unused portions of prior bond authorizations", stakes: "low", note: "When a town authorizes borrowing for a capital project, any unspent portion must be formally rescinded once the project is done. This article retires unused borrowing authorizations that are no longer needed. Standard housekeeping \u2014 no new money is being spent.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "Rescinds $1,025,000 in prior borrowing authorization" },
+  { num: 21, title: "South Reservoir Dam additional funding", cat: "Capital", sponsor: "Capital Planning Committee", vote: "Two-thirds", key: "Dam safety repairs \u2014 state-regulated structure", stakes: "high", note: "Would appropriate additional money for repair and construction at the South Reservoir Dam, including flattening upstream and downstream slopes, tree removal, installation of a seepage filter blanket and other site improvements. Funding may come through borrowing, unexpended bond proceeds, Water & Sewer retained earnings, free cash or state/federal grants. Two-thirds vote required. Dam safety is regulated at the state level, and deferred maintenance carries legal and financial consequences beyond the cost of the repair itself. This article deserves particular attention.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "$830,000 additional (mix of transfers and borrowing)" },
+  { num: 22, title: "Town Hall and library roof repairs additional funding", cat: "Capital", sponsor: "Capital Planning Committee", vote: "Two-thirds", key: "Roof repair/construction, bell tower, library windows", stakes: "high", note: "Would appropriate additional money for roof repair or construction at Town Hall and the Town Library, renovation of the Town Hall Bell Tower and replacement of windows at the Town Library. Funding may come through borrowing, unexpended bond proceeds, transfers from the Building Stabilization Fund or other funds. Two-thirds vote required. These are two of Winchester\u2019s most prominent public buildings.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "$2,400,000 additional ($1,400,000 Building Stab. Fund + $1,000,000 borrowing)" },
+  { num: 23, title: "Town Hall design and development documents", cat: "Capital", sponsor: "Capital Planning Committee", vote: "Two-thirds", key: "D&D docs for Town Hall renovation", stakes: "medium", note: "Would fund architectural and engineering services to prepare Design & Development documents for a comprehensive Town Hall renovation. The scope includes HVAC improvements, ADA compliance, electrical and network upgrades, fire suppression system renovation, restroom improvements, window replacement, structural repairs and modifications. Funding from the Capital Stabilization Fund. Two-thirds vote required. This is a planning step \u2014 the actual renovation would come in a future article \u2014 but the scope signals a significant project ahead.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "$200,000 from Capital Stabilization Fund" },
+  { num: 24, title: "FY27 strategic capital maintenance", cat: "Capital", sponsor: "Select Board / Town Manager / Capital Planning", vote: "Majority", key: "Extends useful life of town assets", stakes: "medium", note: "Would raise and appropriate or transfer from free cash or other available funds a sum for extending the useful life of town assets including equipment, vehicles, building systems and other infrastructure. The town manager would administer the account in consultation with the Capital Planning Committee, effective July 1, 2026. This is a flexible maintenance fund designed to catch items that don\u2019t rise to the level of a standalone capital article.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "$200,000 from free cash" },
+  { num: 25, title: "Carriage House demolition", cat: "Capital", sponsor: "Select Board / School Committee / Capital Planning", vote: "Two-thirds", key: "Demo of structure at 21 High Street", stakes: "medium", note: "Would fund demolition of the Carriage House at 21 High Street, including disposal costs, environmental remediation, site grading, engineering and consulting fees. Funding may come from the Capital Stabilization Fund or other available funds. Two-thirds vote required.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "$300,000 ($19,463.32 from existing account + $280,536.68 from Capital Stab. Fund)" },
+  { num: 26, title: "WHS concrete repairs", cat: "Capital", sponsor: "Educational Facilities Planning & Building Committee", vote: "Two-thirds", key: "Phase two of concrete deterioration repairs", stakes: "medium", note: "Would fund the second phase of repair and remediation for concrete deterioration at Winchester High School, including design, engineering services and associated repairs. Funding may come from the Building Stabilization Fund, Capital Stabilization Fund, free cash or other available funds. Two-thirds vote required.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "Indefinitely postponed" },
+  { num: 27, title: "Muraco Elementary feasibility study", cat: "Capital", sponsor: "School Committee", vote: "Two-thirds", key: "MSBA feasibility study \u2014 potential school building project", stakes: "high", note: "Would fund a feasibility study of Muraco Elementary School at 33 Bates Road under the direction of the Educational Facilities Planning and Building Committee. The study is a potential pathway to a Massachusetts School Building Authority (MSBA) grant. MSBA\u2019s grant program is non-entitlement and discretionary; any costs the town incurs beyond what the MSBA approves are Winchester\u2019s sole responsibility. Funding may come through borrowing, transfer or otherwise. Two-thirds vote required.\n\nThis is especially worth watching. Feasibility studies are often the first concrete commitment in what becomes a years-long, multimillion-dollar school building process, and the vote will signal how the town feels about taking that step while already under budget pressure.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "$1,500,000 (borrowing)" },
+  { num: 28, title: "K-5 literacy curriculum", cat: "Schools", sponsor: "School Committee / Select Board", vote: "Majority", key: "Comprehensive elementary literacy program", stakes: "medium", note: "Would appropriate or transfer from free cash a sum for the purchase and implementation of a comprehensive K-5 elementary literacy curriculum as recommended by the Early Literacy Team after a two-year process that concluded with a pilot initiative during the 2025-2026 school year. The funds cover curriculum materials, instructional resources, assessment tools and implementation supports. Expended under the direction of the superintendent of schools.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "Amount TBD" },
+  { num: 29, title: "FY27 General Fund operating budget", cat: "Budget", sponsor: "Finance Committee", vote: "Majority", key: "Main operating budget \u2014 post-override baseline", stakes: "high", note: "The main event \u2014 the annual operating budget that funds every department in town for fiscal year 2027. This is the post-override baseline: the amount the town can spend within its existing Proposition 2\u00BD levy limit after voters rejected the $11.5 million override on March 21.\n\nThe budget closes a roughly $5.1 million gap through approximately $750,000 in municipal cuts, $950,000 in school-side reductions, about $1 million in new revenue assumptions (interest income, permit fees, transfer station revenue) and a $3.6 million draw on free cash. The article also fixes the salary and compensation of all elective officers and appropriates funds into the Capital and Building Stabilization Funds.\n\nBoard members have expressed concern about the sustainability of this plan beyond a single year. The free cash draw is a one-time fix, and a possible November override question is already being discussed.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "TBD" },
+  { num: 30, title: "FY27 Water and Sewer operating budget", cat: "Budget", sponsor: "Finance Committee", vote: "Majority", key: "Enterprise fund \u2014 $15.53M preliminary budget", stakes: "medium", note: "Would raise and appropriate or transfer from retained earnings or available funds to defray the expenses of the Water and Sewer Enterprise Fund for FY27. The preliminary budget totals $15.53 million, with MWRA capital assessments ($4.64 million, 30 percent) as the largest cost driver. Also appropriates and transfers retained earnings into the Water and Sewer Enterprise Account. Funded by user charges, not the tax levy.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "TBD" },
+  { num: 31, title: "FY27 Recreation operating budget", cat: "Budget", sponsor: "Finance Committee", vote: "Majority", key: "Enterprise fund for Recreation Department", stakes: "low", note: "Would raise and appropriate or transfer from retained earnings or available funds to defray the expenses of the Recreation Department for FY27 and transfer retained earnings into the Recreation Enterprise Account. Funded by user fees, not the tax levy.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "TBD" },
+  { num: 32, title: "FY27 Revolving Fund spending caps", cat: "Finance", sponsor: "Finance Committee", vote: "Majority", key: "Sets maximum spending limits for revolving funds", stakes: "low", note: "State law requires Town Meeting to set maximum spending caps annually for revolving funds, which allow certain departments to spend the fees they collect without returning to Town Meeting each time. The specific caps and fund list will be set in the main motion.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "Revolving fund caps totaling $421,000 ($5,000 Archival + $80,000 Energy + $130,000 BOH + $100,000 Grass Fields + $100,000 Synthetic Fields + $6,000 Historical)" },
+  { num: 33, title: "Personnel Board", cat: "Compensation", sponsor: "Personnel Board", vote: "Majority", key: "Wages, salaries and classification study", stakes: "medium", note: "Town Meeting hears the Personnel Board report and takes action on wages, salaries, working conditions and classification changes for employees subject to and not subject to collective bargaining. Also asks whether the town will appropriate or transfer funds for a classification and compensation study of all non-union positions. The personnel article can be contentious in budget-tight years when wage adjustments compete with service-level cuts.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "" },
+  { num: 34, title: "WCCP FY27 CPA budget", cat: "CPA", sponsor: "Winchester Committee on Community Preservation", vote: "Majority", key: "Community Preservation Act spending plan", stakes: "medium", note: "Would act on the Winchester Committee on Community Preservation report for FY27 and appropriate or reserve funds from Community Preservation Fund revenues for administrative expenses, community preservation projects and other proper expenses. CPA funds come from a local property tax surcharge and state matching funds and operate in a separate budget stream from the General Fund.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "$2,055,000 estimated CPA revenue/appropriations ($40,000 admin + $616,500 restricted reserves + $1,398,500 undesignated reserve)" },
+  { num: 35, title: "CPA project \u2014 Forest Ridge borrowing authorization", cat: "CPA", sponsor: "Winchester Committee on Community Preservation", vote: "Two-thirds", key: "Acquire about 13.66 acres at Forest Circle / Fallon Road", stakes: "high", note: "Would acquire by gift or purchase approximately 13.66 acres at Forest Circle in Winchester (Parcels 1-202 and 1-273) and at Fallon Road in Stoneham (Parcel 26-0-1A) for conservation and passive recreation purposes under the Community Preservation Act. Funding may come from CPA annual revenues, available funds, state or federal grants or borrowing authorized under M.G.L. Chapter 44B. A permanent restriction would be placed on the land under Section 12 of Chapter 44B. Two-thirds vote required.\n\nExpect questions about the purchase price, intended use and whether the CPA fund can absorb the cost without affecting other preservation priorities.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "$3,028,500 ($3,000,000 borrowing + $28,500 acquisition costs from CPA)" },
+  { num: 36, title: "FY27 RAN authorization", cat: "Finance", sponsor: "Town Manager", vote: "Majority", key: "Revenue Anticipation Notes \u2014 cash flow borrowing", stakes: "low", note: "Authorizes the treasurer, with Select Board and town manager approval, to borrow money from time to time in anticipation of revenue for FY27. Revenue Anticipation Notes are standard short-term borrowing tools that ensure the town has cash on hand while waiting for tax receipts and state aid to arrive. Routine.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "" },
+  { num: 37, title: "Chapter 90 authorization", cat: "Finance", sponsor: "Select Board", vote: "Majority", key: "State highway aid for road maintenance", stakes: "low", note: "Would raise and appropriate money to be used with state Chapter 90 highway aid for maintenance, repair, alteration, relocation or other improvements of town ways. Also authorizes the Select Board to acquire easements, land interests and to transfer and use any unused balances. The Chapter 90 program is the primary state funding mechanism for local road work.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "" },
+  { num: 38, title: "Free cash / overlay to reduce the tax levy", cat: "Finance", sponsor: "Town Manager", vote: "Majority", key: "Uses available funds to lower tax rate", stakes: "low", note: "Would transfer any sum of money from available funds to reduce the tax levy for FY27 and transfer funds to or from available funds. This is how the town uses non-tax revenue sources (free cash, overlay surplus) to offset the property tax levy so the tax rate does not have to cover the entire budget.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "" },
+  { num: 39, title: "Transfer Station Data and Resource Committee", cat: "Citizen Petition", sponsor: "George Nowell", vote: "Majority", key: "Five-member committee \u2014 one-year trial", stakes: "medium", note: "Citizen petition to establish a Transfer Station Data and Resource Committee of five members (majority must be Town Meeting members), appointed by the Moderator for a one-year trial. The committee would collect, organize and catalog all financial data related to the Transfer Station and present an annual comprehensive financial report to Town Meeting. It would serve as a technical and financial resource only \u2014 not authorized to set policy or rules.\n\nThe petition arrives in the same season the Select Board has been debating higher transfer station fees (projected at $164,200 in new revenue). Commercial haulers pushed back at the April 6 meeting, arguing the fee methodology was flawed. Petitioner George Nowell was among those who spoke.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "" },
+  { num: 40, title: "Snow and ice bylaw", cat: "Citizen Petition", sponsor: "Shamus Brady", vote: "Majority", key: "Expands sidewalk clearing requirements", stakes: "medium", note: "Citizen petition to amend Sections 8-28 and 8-29 of the Code of Bylaws regarding snow and ice removal from sidewalks. Key changes:\n\u2014 Residentially zoned land: owners must clear snow within eight hours (sunrise to sunset), with a $25/day fine\n\u2014 Apartment houses and condos: full sidewalk width, within three hours, $50/day fine\n\u2014 Commercial properties: full width, within three hours, $50/day fine\n\u2014 Select Board may grant hardship exemptions for health and financial duress\n\u2014 Town may clear and assess costs to non-compliant owners\n\u2014 Creates a three-member review committee (appointed by police chief, DPW director and a citizen) to review the bylaw annually\n\nReplaces existing provisions that applied only to commercial properties with a $10 fine.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "" },
+  { num: 41, title: "Anticoagulant rodenticides bylaw", cat: "Citizen Petition", sponsor: "Katherine Valone", vote: "Majority", key: "Bans first- and second-generation ARs on town property", stakes: "medium", note: "Citizen petition to add Chapter 27 to the Code of Bylaws eliminating all anticoagulant rodenticides (ARs) \u2014 both first- and second-generation \u2014 on town-owned property, including buildings, parks, open spaces and public rights of way. Applies to town employees and third-party contractors.\n\nThe Board of Health may issue time- and location-limited emergency waivers only after documenting a significant public health infestation where all Integrated Pest Management (IPM) alternatives have been exhausted. Waivers would be published on the town\u2019s website.\n\nSecond-generation ARs (brodifacoum, bromadiolone, difenacoum, difethialone) are the primary concern: they persist in animal tissues for up to 330 days and pose a documented risk of secondary poisoning to non-target species including raptors, pets and other wildlife. Similar bylaws have gained traction across Massachusetts.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "" },
+  { num: 42, title: "Ranked choice voting study", cat: "Citizen Petition", sponsor: "John Healey", vote: "Majority", key: "Study committee on RCV for municipal elections", stakes: "medium", note: "Citizen petition to establish a study committee to examine the feasibility and effects of adopting ranked choice voting for municipal town elections. RCV allows voters to rank candidates in order of preference; if no candidate wins a majority of first-choice votes, the last-place candidate is eliminated and their votes redistribute until one candidate reaches a majority. The study would evaluate how RCV would work in Winchester\u2019s specific electoral context.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "" },
+  { num: 43, title: "Removal of drain pipe", cat: "Citizen Petition", sponsor: "Wyatt Biel", vote: "Majority", key: "Remove 18-inch pipe at 176 Dothan Street", stakes: "medium", note: "Citizen petition directing the town manager and DPW to remove an 18-inch municipal stormwater drain pipe installed by the town in May 2018 on private property at 176 Dothan Street (Parcel ID 25-91-0). The pipe receives stormwater and snowmelt runoff from approximately 50 acres of watershed. It was installed under a temporary construction and access easement that expired Dec. 4, 2018, and no permanent easement has ever been obtained, recorded or authorized by Town Meeting vote.\n\nThe petition demands: (1) remove the pipe, (2) restore the property, (3) bear all costs and (4) reroute stormwater through a public right-of-way to eliminate continued discharge onto private property without lawful authorization.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "" },
+  { num: 44, title: "Amend Section 7.3.19 of Zoning Bylaw", cat: "Zoning", sponsor: "Michael Bettencourt", vote: "Two-thirds", key: "Inclusionary zoning \u2014 payments in lieu of units", stakes: "medium", note: "Would amend the inclusionary zoning provisions in Section 7.3.19 and 7.3.19.2 of the Zoning Bylaw to permit the Special Permit Granting Authority to negotiate a combination of on-site affordable housing and payments in lieu of units. Currently the bylaw may not provide enough flexibility for the SPGA to tailor requirements to specific projects. Two-thirds vote required for any zoning amendment.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "" },
+  { num: 45, title: "Modify EFPBC membership", cat: "Governance", sponsor: "Select Board", vote: "Majority", key: "School Committee appointee serves at committee\u2019s pleasure", stakes: "medium", note: "Would restructure the Educational Facilities Planning and Building Committee (EFPBC) effective July 1, 2026, superseding the article that created the committee in November 2000. Key change: the School Committee\u2019s appointed member would serve at the committee\u2019s pleasure, aligning with Massachusetts School Building Authority requirements for how a local school building committee is structured. The MSBA connection matters because state reimbursement for school construction depends in part on committee organization.\n\nThe revised composition: nine members appointed for staggered three-year terms plus the School Committee\u2019s at-pleasure appointee and the superintendent or designee (11 total). Specific seats are reserved for a registered architect, a registered engineer and a contractor/construction manager. Appointing authority is shared among the Select Board, School Committee, Finance Committee and Moderator.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "" },
+  { num: 46, title: "Town Meeting and committee reports", cat: "Procedural", sponsor: "Select Board", vote: "Majority", key: "Hear or accept reports, dissolve/authorize committees", stakes: "low", note: "Standard closing article. Town Meeting votes to hear or accept committee reports, dissolve old committees, authorize new committees or take any other related action. Often used as a catch-all for unfinished administrative business.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "" },
+];
+
+const categoryStyles = {
+  "Procedural":       { bg: "#F0EDE8", text: "#4A4A4A", border: "#E8E2D9" },
+  "Bylaw":            { bg: "#EBF0F7", text: "#1B3A5C", border: "#C5D3E8" },
+  "Governance":       { bg: "#F5F0E8", text: "#5A4D35", border: "#DDD4C3" },
+  "Revenue":          { bg: "#FDF6E3", text: "#8D6E00", border: "#FFE082" },
+  "Finance":          { bg: "#F0EDE8", text: "#4A4A4A", border: "#E8E2D9" },
+  "Capital":          { bg: "#EBF0F7", text: "#1B3A5C", border: "#C5D3E8" },
+  "Budget":           { bg: "#F9E8E7", text: "#C2261D", border: "#E8B4B1" },
+  "Schools":          { bg: "#EBF0F7", text: "#1B3A5C", border: "#C5D3E8" },
+  "Compensation":     { bg: "#F0EDE8", text: "#4A4A4A", border: "#E8E2D9" },
+  "CPA":              { bg: "#E8F5E9", text: "#2E7D32", border: "#A5D6A7" },
+  "Zoning":           { bg: "#EBF0F7", text: "#1B3A5C", border: "#C5D3E8" },
+  "Citizen Petition":  { bg: "#F9E8E7", text: "#C2261D", border: "#E8B4B1" },
+};
+
+const expandedSet = new Set();
+let currentCat = "all";
+let currentStakes = "all";
+let currentSearch = "";
+
+function init() {
+  buildStats();
+  buildCategoryOptions();
+  render();
+  document.getElementById("search").addEventListener("input", e => { currentSearch = e.target.value; render(); });
+  document.getElementById("catFilter").addEventListener("change", e => { currentCat = e.target.value; render(); });
+  document.getElementById("stakesFilter").addEventListener("change", e => { currentStakes = e.target.value; render(); });
+}
+
+function buildStats() {
+  const highCount = articles.filter(a => a.stakes === "high").length;
+  const superCount = articles.filter(a => a.vote !== "Majority").length;
+  const petitionCount = articles.filter(a => a.cat === "Citizen Petition").length;
+  const stats = [
+    { label: "Total articles", value: "46", color: "var(--black)" },
+    { label: "High stakes", value: String(highCount), color: "var(--navy)" },
+    { label: "Need supermajority", value: String(superCount), color: "var(--gold)" },
+    { label: "Citizen petitions", value: String(petitionCount), color: "var(--navy)" },
+  ];
+  document.getElementById("stats").innerHTML = stats.map(s =>
+    '<div class="stat-card"><div class="stat-value" style="color:' + s.color + '">' + s.value + '</div><div class="stat-label">' + s.label + '</div></div>'
+  ).join("");
+}
+
+function buildCategoryOptions() {
+  const cats = [...new Set(articles.map(a => a.cat))];
+  const sel = document.getElementById("catFilter");
+  cats.forEach(c => { const o = document.createElement("option"); o.value = c; o.textContent = c; sel.appendChild(o); });
+}
+
+function getFiltered() {
+  return articles.filter(a => {
+    if (currentCat !== "all" && a.cat !== currentCat) return false;
+    if (currentStakes !== "all" && a.stakes !== currentStakes) return false;
+    if (currentSearch) {
+      const t = currentSearch.toLowerCase();
+      return a.title.toLowerCase().includes(t) || a.key.toLowerCase().includes(t) ||
+             a.sponsor.toLowerCase().includes(t) || (a.note && a.note.toLowerCase().includes(t)) || String(a.num) === t;
+    }
+    return true;
+  });
+}
+
+function badgeHtml(type, value, detail) {
+  if (!value || value === "tbd") {
+    var cls = type === "rec" ? "rec-badge" : "result-badge";
+    return '<span class="' + cls + ' tbd">TBD</span>';
+  }
+  var cls = type === "rec" ? "rec-badge" : "result-badge";
+  var label = value === "no-action" ? "No action" : value.charAt(0).toUpperCase() + value.slice(1);
+  var h = '<span class="' + cls + " " + esc(value) + '">' + esc(label) + '</span>';
+  if (detail) h += '<div style="font-size:9px;color:var(--text-muted);margin-top:2px">' + esc(detail) + '</div>';
+  return h;
+}
+
+function voteLabel(v) {
+  if (v === "Two-thirds") return '\u2154 supermajority';
+  if (v === "Nine-tenths") return '9/10 supermajority';
+  return 'Majority';
+}
+
+function render() {
+  var filtered = getFiltered();
+  document.getElementById("filterCount").textContent = filtered.length + " of 46 shown";
+  var list = document.getElementById("articleList");
+
+  if (filtered.length === 0) { list.innerHTML = '<div class="empty-state">No articles match your filters.</div>'; return; }
+
+  list.innerHTML = filtered.map(function(a) {
+    var isExp = expandedSet.has(a.num);
+    var bc = a.stakes === "high" ? "var(--navy)" : a.stakes === "medium" ? "var(--gold)" : "var(--border)";
+    var cs = categoryStyles[a.cat] || categoryStyles["Procedural"];
+    var hasNote = !!a.note;
+    var voteHtml = "";
+    if (a.vote === "Two-thirds") voteHtml = '<span class="vote-super" style="color:var(--navy)">\u2154 supermajority</span>';
+    else if (a.vote === "Nine-tenths") voteHtml = '<span class="vote-super" style="color:var(--gold)">9/10 supermajority</span>';
+    else voteHtml = "Majority";
+
+    var isSuper = a.vote !== "Majority";
+    var voteTag = isSuper
+      ? '<span class="vote-tag super">' + esc(voteLabel(a.vote)) + '</span>'
+      : '<span class="vote-tag">' + esc(voteLabel(a.vote)) + '</span>';
+
+    var h = '<div class="article-row' + (isExp ? " expanded" : "") + '" style="border-left:4px solid ' + bc + '" data-num="' + a.num + '">';
+    h += '<div class="article-row-main' + (hasNote ? " clickable" : "") + '" onclick="' + (hasNote ? "toggleArticle(" + a.num + ")" : "") + '">';
+
+    h += '<div class="art-num' + (a.stakes === "high" ? " high" : "") + '">' + a.num + '</div>';
+
+    h += '<div class="art-title-wrap"><div class="art-title">' + esc(a.title);
+    if (hasNote) h += '<span class="art-expand-hint">' + (isExp ? "\u25BE" : "\u25B8") + '</span>';
+    h += '</div><div class="art-key">' + esc(a.key) + '</div></div>';
+
+    h += '<div class="cat-cell"><span class="cat-badge" style="background:' + cs.bg + ';color:' + cs.text + ';border:1px solid ' + cs.border + '">' + esc(a.cat) + '</span></div>';
+    h += '<div class="vote-cell-wrap"><div class="vote-cell">' + voteHtml + '</div></div>';
+    h += '<div class="sb-rec-cell-wrap"><div class="rec-cell">' + badgeHtml("rec", a.sbRec, "") + '</div></div>';
+    h += '<div class="rec-cell-wrap"><div class="rec-cell">' + badgeHtml("rec", a.rec, a.recBy) + '</div></div>';
+    h += '<div class="result-cell-wrap"><div class="result-cell">' + badgeHtml("result", a.result, a.resultDetail) + '</div></div>';
+
+    h += '<div class="mobile-badges">';
+    h += '<span class="cat-badge" style="background:' + cs.bg + ';color:' + cs.text + ';border:1px solid ' + cs.border + '">' + esc(a.cat) + '</span>';
+    h += voteTag;
+    h += badgeHtml("rec", a.sbRec, "");
+    h += badgeHtml("rec", a.rec, a.recBy);
+    h += badgeHtml("result", a.result, a.resultDetail);
+    h += '</div>';
+
+    h += '</div>';
+
+    if (isExp && a.note) {
+      h += '<div class="art-detail">';
+      if (a.amount) h += '<div class="art-detail-amount"><strong>Draft motion book amount: ' + esc(a.amount) + '</strong></div>';
+      h += '<div class="art-detail-text">' + esc(a.note).replace(/\n/g, '<br>') + '</div>';
+      h += '<div class="art-detail-sponsor">Sponsor: ' + esc(a.sponsor) + '</div></div>';
+    }
+    h += '</div>';
+    return h;
+  }).join("");
+}
+
+function toggleArticle(num) {
+  if (expandedSet.has(num)) expandedSet.delete(num);
+  else expandedSet.add(num);
+  render();
+}
+
+function esc(s) { var d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+
+init();
+</script>
+
+</body></html>
