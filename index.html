@@ -1,31 +1,35 @@
-<!--
-  Winchester News — 2026 Town Meeting Warrant Tracker
-  Optimized for Ghost.org HTML block embedding.
-  All CSS scoped under .wnt-wrap to avoid Ghost theme conflicts.
--->
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>2026 Town Meeting Warrant Tracker — Winchester News</title>
+<meta name="description" content="An interactive tracker for all 46 warrant articles at Winchester's 2026 Spring Annual Representative Town Meeting.">
 <style>
-  .wnt-wrap, .wnt-wrap *, .wnt-wrap *::before, .wnt-wrap *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-  .wnt-wrap {
-    --wnt-navy: #1B3A5C;
-    --wnt-gold: #B8860B;
-    --wnt-black: #1E1F21;
-    --wnt-white: #FFF5EE;
-    --wnt-font: Georgia, 'Times New Roman', serif;
-    --wnt-bg-card: #FFF5EE;
-    --wnt-bg-card-hover: #FCEEE5;
-    --wnt-bg-expanded: #F9E8DD;
-    --wnt-border: #E8E2D9;
-    --wnt-text-secondary: #4A4A4A;
-    --wnt-text-muted: #6B655C;
-    --wnt-accent-light: #EBF0F7;
-    --wnt-navy-light: #EBF0F7;
-    --wnt-navy-mid: #C5D3E8;
-    --wnt-gold-light: #FDF6E3;
+  :root {
+    --navy: #1B3A5C;
+    --gold: #B8860B;
+    --black: #1E1F21;
+    --white: #FFF5EE;
+    --font: Georgia, 'Times New Roman', serif;
+    --bg-card: #FFF5EE;
+    --bg-card-hover: #FCEEE5;
+    --bg-expanded: #F9E8DD;
+    --border: #E8E2D9;
+    --text-secondary: #4A4A4A;
+    --text-muted: #6B655C;
+    --accent-light: #EBF0F7;
+    --navy-light: #EBF0F7;
+    --navy-mid: #C5D3E8;
+    --gold-light: #FDF6E3;
+  }
 
-    font-family: var(--wnt-font);
-    background: var(--wnt-white);
-    color: var(--wnt-black);
+  body {
+    font-family: var(--font);
+    background: var(--white);
+    color: var(--black);
     padding: 24px 20px;
     max-width: 960px;
     margin: 0 auto;
@@ -34,270 +38,270 @@
     -moz-text-size-adjust: 100%;
     text-size-adjust: 100%;
     line-height: 1.4;
-    overflow-x: clip;
+    overflow-x: hidden;
   }
 
   /* -- Masthead -- */
-  .wnt-wrap .wnt-masthead-top-wrap { text-align: center; margin-bottom: 6px; }
-  .wnt-wrap .wnt-masthead-kicker { font-size: 13px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--wnt-navy); margin-bottom: 6px; }
-  .wnt-wrap .wnt-masthead-title { font-size: 38px; font-weight: 700; color: var(--wnt-black); line-height: 1.15; letter-spacing: -0.5px; }
-  .wnt-wrap .wnt-masthead-date { font-size: 14px; color: var(--wnt-text-secondary); margin-top: 8px; font-style: italic; }
-  .wnt-wrap .wnt-masthead-byline { font-size: 11px; color: var(--wnt-black); font-weight: 700; text-align: center; margin-bottom: 18px; letter-spacing: 1.5px; }
+  .masthead-top-wrap { text-align: center; margin-bottom: 6px; }
+  .masthead-kicker { font-size: 13px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--navy); margin-bottom: 6px; }
+  .masthead-title { font-size: 38px; font-weight: 700; color: var(--black); line-height: 1.15; letter-spacing: -0.5px; }
+  .masthead-date { font-size: 14px; color: var(--text-secondary); margin-top: 8px; font-style: italic; }
+  .masthead-byline { font-size: 11px; color: var(--black); font-weight: 700; text-align: center; margin-bottom: 18px; letter-spacing: 1.5px; }
 
   /* -- Header -- */
-  .wnt-wrap .wnt-header { border-bottom: 2px solid var(--wnt-black); padding-bottom: 14px; margin-bottom: 20px; }
-  .wnt-wrap .wnt-header-kicker { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--wnt-navy); margin-bottom: 6px; }
-  .wnt-wrap .wnt-header h1 { font-size: 28px; font-weight: 700; line-height: 1.2; color: var(--wnt-black); }
-  .wnt-wrap .wnt-header-sub { font-size: 14px; color: var(--wnt-text-secondary); margin-top: 8px; font-style: italic; line-height: 1.5; }
+  .header { border-bottom: 2px solid var(--black); padding-bottom: 14px; margin-bottom: 20px; }
+  .header-kicker { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--navy); margin-bottom: 6px; }
+  .header h1 { font-size: 28px; font-weight: 700; line-height: 1.2; color: var(--black); }
+  .header-sub { font-size: 14px; color: var(--text-secondary); margin-top: 8px; font-style: italic; line-height: 1.5; }
 
   /* -- RTM callout -- */
-  .wnt-wrap .wnt-rtm-callout {
-    margin-bottom: 20px; padding: 14px 16px; background: var(--wnt-accent-light);
-    border-radius: 4px; border: 1px solid var(--wnt-navy-mid); border-left: 4px solid var(--wnt-navy);
+  .rtm-callout {
+    margin-bottom: 20px; padding: 14px 16px; background: var(--accent-light);
+    border-radius: 4px; border: 1px solid var(--navy-mid); border-left: 4px solid var(--navy);
   }
-  .wnt-wrap .wnt-rtm-kicker { font-size: 10px; font-weight: 700; color: var(--wnt-navy); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1.5px; }
-  .wnt-wrap .wnt-rtm-body { font-size: 13px; color: var(--wnt-text-secondary); line-height: 1.6; }
-  .wnt-wrap .wnt-rtm-body strong { color: var(--wnt-black); }
+  .rtm-kicker { font-size: 10px; font-weight: 700; color: var(--navy); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1.5px; }
+  .rtm-body { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+  .rtm-body strong { color: var(--black); }
 
   /* -- Stats -- */
-  .wnt-wrap .wnt-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
-  .wnt-wrap .wnt-stat-card { background: var(--wnt-bg-card); border-radius: 4px; padding: 12px 10px; text-align: center; border: 1px solid var(--wnt-border); }
-  .wnt-wrap .wnt-stat-value { font-size: 26px; font-weight: 700; line-height: 1; }
-  .wnt-wrap .wnt-stat-label { font-size: 10px; color: var(--wnt-text-muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.8px; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+  .stat-card { background: var(--bg-card); border-radius: 4px; padding: 12px 10px; text-align: center; border: 1px solid var(--border); }
+  .stat-value { font-size: 26px; font-weight: 700; line-height: 1; }
+  .stat-label { font-size: 10px; color: var(--text-muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.8px; }
 
   /* -- Filters -- */
-  .wnt-wrap .wnt-filters { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; align-items: center; }
-  .wnt-wrap .wnt-filters input[type="text"] {
-    padding: 8px 12px; font-family: var(--wnt-font); font-size: 16px; font-style: italic;
-    border: 1px solid var(--wnt-border); border-radius: 4px; flex: 1; min-width: 140px;
-    outline: none; background: var(--wnt-bg-card); color: var(--wnt-black);
+  .filters { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; align-items: center; }
+  .filters input[type="text"] {
+    padding: 8px 12px; font-family: var(--font); font-size: 16px; font-style: italic;
+    border: 1px solid var(--border); border-radius: 4px; flex: 1; min-width: 140px;
+    outline: none; background: var(--bg-card); color: var(--black);
     -webkit-appearance: none; appearance: none;
   }
-  .wnt-wrap .wnt-filters select {
-    padding: 8px 10px; font-family: var(--wnt-font); font-size: 16px;
-    border: 1px solid var(--wnt-border); border-radius: 4px; background: var(--wnt-bg-card);
-    color: var(--wnt-black); cursor: pointer; outline: none;
+  .filters select {
+    padding: 8px 10px; font-family: var(--font); font-size: 16px;
+    border: 1px solid var(--border); border-radius: 4px; background: var(--bg-card);
+    color: var(--black); cursor: pointer; outline: none;
     -webkit-appearance: none; appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B655C' fill='none' stroke-width='1.5'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 10px center;
     padding-right: 28px;
   }
-  .wnt-wrap .wnt-filter-count { font-size: 11px; color: var(--wnt-text-muted); margin-left: auto; text-align: right; }
+  .filter-count { font-size: 11px; color: var(--text-muted); margin-left: auto; text-align: right; }
 
   /* -- Legend -- */
-  .wnt-wrap .wnt-legend { display: flex; gap: 14px; margin-bottom: 14px; font-size: 11px; color: var(--wnt-text-muted); flex-wrap: wrap; align-items: center; }
-  .wnt-wrap .wnt-legend-title { font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
-  .wnt-wrap .wnt-legend-item { display: flex; align-items: center; gap: 5px; }
-  .wnt-wrap .wnt-legend-bar { width: 14px; height: 3px; display: inline-block; border-radius: 1px; }
+  .legend { display: flex; gap: 14px; margin-bottom: 14px; font-size: 11px; color: var(--text-muted); flex-wrap: wrap; align-items: center; }
+  .legend-title { font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+  .legend-item { display: flex; align-items: center; gap: 5px; }
+  .legend-bar { width: 14px; height: 3px; display: inline-block; border-radius: 1px; }
 
   /* -- Desktop table (961px+) -- */
-  .wnt-wrap .wnt-table-wrap { border: 1px solid var(--wnt-border); border-radius: 4px; overflow: visible; background: var(--wnt-bg-card); }
+  .table-wrap { border: 1px solid var(--border); border-radius: 4px; overflow: visible; background: var(--bg-card); }
 
-  .wnt-wrap .wnt-col-header {
+  .col-header {
     display: grid; grid-template-columns: 50px 1fr 120px 90px 120px 120px 110px;
-    padding: 8px 14px; background: var(--wnt-black);
+    padding: 8px 14px; background: var(--black);
     font-size: 10px; font-weight: 700;
     text-transform: uppercase; letter-spacing: 0.8px; color: #FFFFFF; gap: 10px;
     align-items: center;
     position: sticky; top: 0; z-index: 10;
   }
-  .wnt-wrap .wnt-col-header div { text-align: center; line-height: 1.3; }
+  .col-header div { text-align: center; line-height: 1.3; }
 
-  .wnt-wrap .wnt-article-row { border-bottom: 1px solid var(--wnt-border); transition: background 0.15s ease; }
-  .wnt-wrap .wnt-article-row.wnt-expanded { background: var(--wnt-bg-expanded); }
+  .article-row { border-bottom: 1px solid var(--border); transition: background 0.15s ease; }
+  .article-row.expanded { background: var(--bg-expanded); }
 
-  .wnt-wrap .wnt-article-row-main {
+  .article-row-main {
     display: grid; grid-template-columns: 50px 1fr 120px 90px 120px 120px 110px;
     align-items: center; padding: 11px 14px; gap: 10px;
   }
-  .wnt-wrap .wnt-article-row-main.wnt-clickable { cursor: pointer; }
-  .wnt-wrap .wnt-article-row-main.wnt-clickable:hover { background: var(--wnt-bg-card-hover); }
+  .article-row-main.clickable { cursor: pointer; }
+  .article-row-main.clickable:hover { background: var(--bg-card-hover); }
 
-  .wnt-wrap .wnt-art-num { font-size: 22px; font-weight: 700; text-align: center; line-height: 1; color: var(--wnt-black); }
-  .wnt-wrap .wnt-art-num.wnt-high { color: var(--wnt-navy); }
-  .wnt-wrap .wnt-art-title { font-size: 15px; font-weight: 700; color: var(--wnt-black); line-height: 1.35; padding-left: 6px; }
-  .wnt-wrap .wnt-art-expand-hint { margin-left: 5px; font-size: 11px; color: var(--wnt-text-muted); font-weight: 400; }
-  .wnt-wrap .wnt-art-key { font-size: 12px; color: var(--wnt-text-secondary); margin-top: 2px; font-style: italic; padding-left: 6px; }
+  .art-num { font-size: 22px; font-weight: 700; text-align: center; line-height: 1; color: var(--black); }
+  .art-num.high { color: var(--navy); }
+  .art-title { font-size: 15px; font-weight: 700; color: var(--black); line-height: 1.35; padding-left: 6px; }
+  .art-expand-hint { margin-left: 5px; font-size: 11px; color: var(--text-muted); font-weight: 400; }
+  .art-key { font-size: 12px; color: var(--text-secondary); margin-top: 2px; font-style: italic; padding-left: 6px; }
 
-  .wnt-wrap .wnt-cat-cell { text-align: center; }
-  .wnt-wrap .wnt-cat-badge {
+  .cat-cell { text-align: center; }
+  .cat-badge {
     display: inline-block; font-size: 10px; font-weight: 700;
     padding: 3px 8px; border-radius: 3px; letter-spacing: 0.3px; text-transform: uppercase;
     white-space: nowrap;
   }
 
-  .wnt-wrap .wnt-vote-cell { font-size: 11px; color: var(--wnt-text-secondary); text-align: center; }
-  .wnt-wrap .wnt-vote-super { font-weight: 700; }
+  .vote-cell { font-size: 11px; color: var(--text-secondary); text-align: center; }
+  .vote-super { font-weight: 700; }
 
-  .wnt-wrap .wnt-rec-cell, .wnt-wrap .wnt-result-cell { font-size: 11px; text-align: center; }
+  .rec-cell, .result-cell { font-size: 11px; text-align: center; }
 
-  .wnt-wrap .wnt-rec-badge, .wnt-wrap .wnt-result-badge {
+  .rec-badge, .result-badge {
     display: inline-block; font-size: 10px; font-weight: 700;
     padding: 3px 10px; border-radius: 3px; letter-spacing: 0.2px; text-transform: uppercase;
     white-space: nowrap;
   }
-  .wnt-wrap .wnt-rec-badge.wnt-favorable { background: #E8F5E9; color: #2E7D32; border: 1px solid #A5D6A7; }
-  .wnt-wrap .wnt-rec-badge.wnt-unfavorable { background: #FFEBEE; color: #C62828; border: 1px solid #EF9A9A; }
-  .wnt-wrap .wnt-rec-badge.wnt-no-action { background: #F0EDE8; color: var(--wnt-text-secondary); border: 1px solid var(--wnt-border); }
-  .wnt-wrap .wnt-rec-badge.wnt-pending { background: #FFF8E1; color: #8D6E00; border: 1px solid #FFE082; }
-  .wnt-wrap .wnt-rec-badge.wnt-split { background: #FFF3E0; color: #BF6900; border: 1px solid #FFCC80; }
+  .rec-badge.favorable { background: #E8F5E9; color: #2E7D32; border: 1px solid #A5D6A7; }
+  .rec-badge.unfavorable { background: #FFEBEE; color: #C62828; border: 1px solid #EF9A9A; }
+  .rec-badge.no-action { background: #F0EDE8; color: var(--text-secondary); border: 1px solid var(--border); }
+  .rec-badge.pending { background: #FFF8E1; color: #8D6E00; border: 1px solid #FFE082; }
+  .rec-badge.split { background: #FFF3E0; color: #BF6900; border: 1px solid #FFCC80; }
 
-  .wnt-wrap .wnt-result-badge.wnt-passed { background: #E8F5E9; color: #2E7D32; border: 1px solid #A5D6A7; }
-  .wnt-wrap .wnt-result-badge.wnt-failed { background: #FFEBEE; color: #C62828; border: 1px solid #EF9A9A; }
-  .wnt-wrap .wnt-result-badge.wnt-tbd { background: #F0EDE8; color: var(--wnt-text-muted); border: 1px solid var(--wnt-border); }
-  .wnt-wrap .wnt-result-badge.wnt-amended { background: #EBF0F7; color: var(--wnt-navy); border: 1px solid var(--wnt-navy-mid); }
-  .wnt-wrap .wnt-result-badge.wnt-withdrawn { background: #F0EDE8; color: var(--wnt-text-secondary); border: 1px solid var(--wnt-border); }
+  .result-badge.passed { background: #E8F5E9; color: #2E7D32; border: 1px solid #A5D6A7; }
+  .result-badge.failed { background: #FFEBEE; color: #C62828; border: 1px solid #EF9A9A; }
+  .result-badge.tbd { background: #F0EDE8; color: var(--text-muted); border: 1px solid var(--border); }
+  .result-badge.amended { background: #EBF0F7; color: var(--navy); border: 1px solid var(--navy-mid); }
+  .result-badge.withdrawn { background: #F0EDE8; color: var(--text-secondary); border: 1px solid var(--border); }
 
   /* -- Expanded detail -- */
-  .wnt-wrap .wnt-art-detail {
+  .art-detail {
     padding: 0 16px 14px 76px; font-size: 14px;
-    color: var(--wnt-text-secondary); line-height: 1.6; border-top: 1px solid var(--wnt-border);
+    color: var(--text-secondary); line-height: 1.6; border-top: 1px solid var(--border);
   }
-  .wnt-wrap .wnt-art-detail-text { margin-top: 10px; }
-  .wnt-wrap .wnt-art-detail-amount { font-size: 15px; color: var(--wnt-navy); margin-bottom: 10px; padding: 8px 12px; background: var(--wnt-accent-light); border-left: 3px solid var(--wnt-navy); }
-  .wnt-wrap .wnt-art-detail-sponsor {
+  .art-detail-text { margin-top: 10px; }
+  .art-detail-amount { font-size: 15px; color: var(--navy); margin-bottom: 10px; padding: 8px 12px; background: var(--accent-light); border-left: 3px solid var(--navy); }
+  .art-detail-sponsor {
     margin-top: 8px; font-size: 11px;
-    color: var(--wnt-text-muted); text-transform: uppercase; letter-spacing: 0.5px;
+    color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;
   }
 
-  .wnt-wrap .wnt-empty-state { padding: 36px; text-align: center; color: var(--wnt-text-muted); font-size: 14px; font-style: italic; }
+  .empty-state { padding: 36px; text-align: center; color: var(--text-muted); font-size: 14px; font-style: italic; }
 
   /* -- Budget callout -- */
-  .wnt-wrap .wnt-budget-callout {
-    margin-top: 18px; padding: 14px 16px; background: var(--wnt-bg-card);
-    border-radius: 4px; border: 1px solid var(--wnt-border); border-left: 4px solid var(--wnt-navy);
+  .budget-callout {
+    margin-top: 18px; padding: 14px 16px; background: var(--bg-card);
+    border-radius: 4px; border: 1px solid var(--border); border-left: 4px solid var(--navy);
   }
-  .wnt-wrap .wnt-budget-kicker { font-size: 10px; font-weight: 700; color: var(--wnt-navy); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1.5px; }
-  .wnt-wrap .wnt-budget-body { font-size: 14px; color: var(--wnt-text-secondary); line-height: 1.7; }
-  .wnt-wrap .wnt-budget-body strong { color: var(--wnt-black); }
-  .wnt-wrap .wnt-budget-body .wnt-navy { color: var(--wnt-navy); }
+  .budget-kicker { font-size: 10px; font-weight: 700; color: var(--navy); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1.5px; }
+  .budget-body { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
+  .budget-body strong { color: var(--black); }
+  .budget-body .navy { color: var(--navy); }
 
   /* -- Badge key -- */
-  .wnt-wrap .wnt-key-callout { margin-top: 8px; padding: 6px 12px; background: var(--wnt-bg-card); border-radius: 4px; border: 1px solid var(--wnt-border); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-  .wnt-wrap .wnt-key-callout-title { font-size: 10px; font-weight: 700; color: var(--wnt-text-secondary); text-transform: uppercase; letter-spacing: 1.5px; white-space: nowrap; }
-  .wnt-wrap .wnt-key-grid { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
-  .wnt-wrap .wnt-key-grid .wnt-rec-badge, .wnt-wrap .wnt-key-grid .wnt-result-badge { font-size: 9px; }
+  .key-callout { margin-top: 8px; padding: 6px 12px; background: var(--bg-card); border-radius: 4px; border: 1px solid var(--border); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .key-callout-title { font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1.5px; white-space: nowrap; }
+  .key-grid { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+  .key-grid .rec-badge, .key-grid .result-badge { font-size: 9px; }
 
   /* -- Source -- */
-  .wnt-wrap .wnt-source-line { font-size: 10px; color: var(--wnt-text-muted); margin-top: 14px; text-align: center; letter-spacing: 0.3px; line-height: 1.5; }
+  .source-line { font-size: 10px; color: var(--text-muted); margin-top: 14px; text-align: center; letter-spacing: 0.3px; line-height: 1.5; }
 
   /* -- Footer nameplate -- */
-  .wnt-wrap .wnt-footer-nameplate { text-align: center; margin-top: 20px; margin-bottom: 10px; }
-  .wnt-wrap .wnt-footer-nameplate .wnt-fn-top { font-size: 36px; color: var(--wnt-black); letter-spacing: 0.5px; }
-  .wnt-wrap .wnt-footer-nameplate .wnt-fn-bottom { font-size: 44px; font-weight: 800; color: var(--wnt-navy); letter-spacing: 3px; text-transform: uppercase; line-height: 1; }
+  .footer-nameplate { text-align: center; margin-top: 20px; margin-bottom: 10px; }
+  .footer-nameplate .fn-top { font-size: 36px; color: var(--black); letter-spacing: 0.5px; }
+  .footer-nameplate .fn-bottom { font-size: 44px; font-weight: 800; color: var(--navy); letter-spacing: 3px; text-transform: uppercase; line-height: 1; }
 
   /* -- Mobile badge row (hidden by default) -- */
-  .wnt-wrap .wnt-mobile-badges { display: none; }
+  .mobile-badges { display: none; }
 
   /* =========== PHONE PORTRAIT <= 680px =========== */
   @media (max-width: 680px) {
-    .wnt-wrap { padding: 14px 10px; }
-    .wnt-wrap .wnt-masthead-kicker { font-size: 10px; letter-spacing: 2px; }
-    .wnt-wrap .wnt-masthead-title { font-size: 26px; }
-    .wnt-wrap .wnt-masthead-date { font-size: 12px; }
-    .wnt-wrap .wnt-masthead-byline { font-size: 10px; letter-spacing: 1px; margin-bottom: 14px; }
-    .wnt-wrap .wnt-header h1 { font-size: 22px; }
-    .wnt-wrap .wnt-header-sub { font-size: 13px; }
-    .wnt-wrap .wnt-stats { grid-template-columns: repeat(2, 1fr); gap: 6px; }
-    .wnt-wrap .wnt-stat-value { font-size: 22px; }
-    .wnt-wrap .wnt-stat-label { font-size: 9px; }
-    .wnt-wrap .wnt-stat-card { padding: 10px 6px; }
-    .wnt-wrap .wnt-filters { flex-direction: column; gap: 6px; }
-    .wnt-wrap .wnt-filters input[type="text"] { width: 100%; min-width: 0; font-size: 16px; padding: 10px 12px; }
-    .wnt-wrap .wnt-filters select { width: 100%; font-size: 16px; padding: 10px 12px; }
-    .wnt-wrap .wnt-filter-count { margin-left: 0; text-align: left; width: 100%; }
-    .wnt-wrap .wnt-legend { gap: 10px; font-size: 10px; }
-    .wnt-wrap .wnt-col-header {
+    body { padding: 14px 10px; }
+    .masthead-kicker { font-size: 10px; letter-spacing: 2px; }
+    .masthead-title { font-size: 26px; }
+    .masthead-date { font-size: 12px; }
+    .masthead-byline { font-size: 10px; letter-spacing: 1px; margin-bottom: 14px; }
+    .header h1 { font-size: 22px; }
+    .header-sub { font-size: 13px; }
+    .stats { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+    .stat-value { font-size: 22px; }
+    .stat-label { font-size: 9px; }
+    .stat-card { padding: 10px 6px; }
+    .filters { flex-direction: column; gap: 6px; }
+    .filters input[type="text"] { width: 100%; min-width: 0; font-size: 16px; padding: 10px 12px; }
+    .filters select { width: 100%; font-size: 16px; padding: 10px 12px; }
+    .filter-count { margin-left: 0; text-align: left; width: 100%; }
+    .legend { gap: 10px; font-size: 10px; }
+    .col-header {
       display: grid; grid-template-columns: 42px 1fr;
       padding: 8px 12px; gap: 2px 10px;
       position: sticky; top: 0; z-index: 10;
     }
-    .wnt-wrap .wnt-col-header div:nth-child(n+3) { display: none; }
-    .wnt-wrap .wnt-table-wrap { border: none; border-radius: 0; background: transparent; }
-    .wnt-wrap .wnt-article-row {
+    .col-header div:nth-child(n+3) { display: none; }
+    .table-wrap { border: none; border-radius: 0; background: transparent; }
+    .article-row {
       border-bottom: none; margin-bottom: 8px; border-radius: 6px;
-      border: 1px solid var(--wnt-border); overflow: hidden; background: var(--wnt-bg-card);
+      border: 1px solid var(--border); overflow: hidden; background: var(--bg-card);
     }
-    .wnt-wrap .wnt-article-row-main {
+    .article-row-main {
       display: grid; grid-template-columns: 42px 1fr;
       grid-template-rows: auto auto; padding: 12px; gap: 2px 10px;
     }
-    .wnt-wrap .wnt-art-num { font-size: 20px; grid-row: 1 / 3; align-self: start; padding-top: 2px; }
-    .wnt-wrap .wnt-art-title-wrap { grid-column: 2; }
-    .wnt-wrap .wnt-art-title { font-size: 14px; padding-left: 0; }
-    .wnt-wrap .wnt-art-key { font-size: 11px; padding-left: 0; }
-    .wnt-wrap .wnt-cat-cell, .wnt-wrap .wnt-vote-cell-wrap, .wnt-wrap .wnt-sb-rec-cell-wrap, .wnt-wrap .wnt-rec-cell-wrap, .wnt-wrap .wnt-result-cell-wrap { display: none; }
-    .wnt-wrap .wnt-mobile-badges {
+    .art-num { font-size: 20px; grid-row: 1 / 3; align-self: start; padding-top: 2px; }
+    .art-title-wrap { grid-column: 2; }
+    .art-title { font-size: 14px; padding-left: 0; }
+    .art-key { font-size: 11px; padding-left: 0; }
+    .cat-cell, .vote-cell-wrap, .sb-rec-cell-wrap, .rec-cell-wrap, .result-cell-wrap { display: none; }
+    .mobile-badges {
       display: flex; gap: 5px; flex-wrap: nowrap; align-items: center;
       grid-column: 2; margin-top: 6px;
       overflow-x: auto; -webkit-overflow-scrolling: touch;
       scrollbar-width: none; -ms-overflow-style: none;
     }
-    .wnt-wrap .wnt-mobile-badges::-webkit-scrollbar { display: none; }
-    .wnt-wrap .wnt-mobile-badges .wnt-cat-badge { font-size: 9px; padding: 2px 6px; flex-shrink: 0; }
-    .wnt-wrap .wnt-mobile-badges .wnt-vote-tag { font-size: 9px; color: var(--wnt-text-secondary); font-style: italic; flex-shrink: 0; white-space: nowrap; }
-    .wnt-wrap .wnt-mobile-badges .wnt-vote-tag.wnt-super { color: var(--wnt-navy); font-weight: 700; font-style: normal; }
-    .wnt-wrap .wnt-mobile-badges .wnt-rec-badge, .wnt-wrap .wnt-mobile-badges .wnt-result-badge { font-size: 9px; padding: 2px 6px; flex-shrink: 0; }
-    .wnt-wrap .wnt-art-detail { padding: 10px 12px 14px 12px; font-size: 13px; }
-    .wnt-wrap .wnt-art-detail-amount { font-size: 15px; color: var(--wnt-navy); margin-bottom: 10px; padding: 8px 12px; background: var(--wnt-accent-light); border-left: 3px solid var(--wnt-navy); }
-    .wnt-wrap .wnt-art-detail-sponsor { font-size: 10px; }
-    .wnt-wrap .wnt-budget-callout { padding: 12px; }
-    .wnt-wrap .wnt-budget-body { font-size: 13px; }
-    .wnt-wrap .wnt-key-callout { padding: 5px 10px; gap: 6px; }
-    .wnt-wrap .wnt-key-grid { gap: 4px; }
-    .wnt-wrap .wnt-source-line { font-size: 9px; }
-    .wnt-wrap .wnt-footer-nameplate .wnt-fn-top { font-size: 24px; }
-    .wnt-wrap .wnt-footer-nameplate .wnt-fn-bottom { font-size: 30px; letter-spacing: 2px; }
+    .mobile-badges::-webkit-scrollbar { display: none; }
+    .mobile-badges .cat-badge { font-size: 9px; padding: 2px 6px; flex-shrink: 0; }
+    .mobile-badges .vote-tag { font-size: 9px; color: var(--text-secondary); font-style: italic; flex-shrink: 0; white-space: nowrap; }
+    .mobile-badges .vote-tag.super { color: var(--navy); font-weight: 700; font-style: normal; }
+    .mobile-badges .rec-badge, .mobile-badges .result-badge { font-size: 9px; padding: 2px 6px; flex-shrink: 0; }
+    .art-detail { padding: 10px 12px 14px 12px; font-size: 13px; }
+    .art-detail-amount { font-size: 15px; color: var(--navy); margin-bottom: 10px; padding: 8px 12px; background: var(--accent-light); border-left: 3px solid var(--navy); }
+    .art-detail-sponsor { font-size: 10px; }
+    .budget-callout { padding: 12px; }
+    .budget-body { font-size: 13px; }
+    .key-callout { padding: 5px 10px; gap: 6px; }
+    .key-grid { gap: 4px; }
+    .source-line { font-size: 9px; }
+    .footer-nameplate .fn-top { font-size: 24px; }
+    .footer-nameplate .fn-bottom { font-size: 30px; letter-spacing: 2px; }
   }
 
   @media (min-width: 376px) and (max-width: 680px) {
-    .wnt-wrap .wnt-stats { grid-template-columns: repeat(4, 1fr); }
+    .stats { grid-template-columns: repeat(4, 1fr); }
   }
 
   /* =========== TABLET 681-960px =========== */
   @media (min-width: 681px) and (max-width: 960px) {
-    .wnt-wrap { padding: 20px 16px; }
-    .wnt-wrap .wnt-masthead-title { font-size: 32px; }
-    .wnt-wrap .wnt-col-header, .wnt-wrap .wnt-article-row-main {
+    body { padding: 20px 16px; }
+    .masthead-title { font-size: 32px; }
+    .col-header, .article-row-main {
       grid-template-columns: 50px 1fr 120px 110px 110px 100px; gap: 10px;
       padding-left: 12px; padding-right: 12px;
     }
-    .wnt-wrap .wnt-vote-cell-wrap { display: none; }
-    .wnt-wrap .wnt-col-header div:nth-child(4) { display: none; }
-    .wnt-wrap .wnt-art-num { font-size: 20px; }
-    .wnt-wrap .wnt-art-title { font-size: 14px; }
-    .wnt-wrap .wnt-art-key { font-size: 11px; }
-    .wnt-wrap .wnt-art-detail { padding-left: 68px; font-size: 13px; }
-    .wnt-wrap .wnt-footer-nameplate .wnt-fn-top { font-size: 28px; }
-    .wnt-wrap .wnt-footer-nameplate .wnt-fn-bottom { font-size: 36px; }
+    .vote-cell-wrap { display: none; }
+    .col-header div:nth-child(4) { display: none; }
+    .art-num { font-size: 20px; }
+    .art-title { font-size: 14px; }
+    .art-key { font-size: 11px; }
+    .art-detail { padding-left: 68px; font-size: 13px; }
+    .footer-nameplate .fn-top { font-size: 28px; }
+    .footer-nameplate .fn-bottom { font-size: 36px; }
   }
 
   /* =========== LANDSCAPE =========== */
   @media (max-height: 500px) and (orientation: landscape) {
-    .wnt-wrap { padding: 10px 16px; }
-    .wnt-wrap .wnt-masthead-top-wrap { margin-bottom: 4px; }
-    .wnt-wrap .wnt-masthead-title { font-size: 24px; }
-    .wnt-wrap .wnt-masthead-date { font-size: 11px; margin-top: 4px; }
-    .wnt-wrap .wnt-masthead-byline { margin-bottom: 10px; }
-    .wnt-wrap .wnt-header { padding-bottom: 8px; margin-bottom: 12px; }
-    .wnt-wrap .wnt-header h1 { font-size: 20px; }
-    .wnt-wrap .wnt-stats { gap: 6px; margin-bottom: 12px; }
-    .wnt-wrap .wnt-stat-card { padding: 8px 6px; }
-    .wnt-wrap .wnt-stat-value { font-size: 20px; }
-    .wnt-wrap .wnt-budget-callout { padding: 10px 12px; }
-    .wnt-wrap .wnt-budget-body { font-size: 12px; }
+    body { padding: 10px 16px; }
+    .masthead-top-wrap { margin-bottom: 4px; }
+    .masthead-title { font-size: 24px; }
+    .masthead-date { font-size: 11px; margin-top: 4px; }
+    .masthead-byline { margin-bottom: 10px; }
+    .header { padding-bottom: 8px; margin-bottom: 12px; }
+    .header h1 { font-size: 20px; }
+    .stats { gap: 6px; margin-bottom: 12px; }
+    .stat-card { padding: 8px 6px; }
+    .stat-value { font-size: 20px; }
+    .budget-callout { padding: 10px 12px; }
+    .budget-body { font-size: 12px; }
   }
 
   /* =========== SAFE AREA =========== */
   @supports (padding: env(safe-area-inset-left)) {
-    .wnt-wrap {
+    body {
       padding-left: max(20px, env(safe-area-inset-left));
       padding-right: max(20px, env(safe-area-inset-right));
       padding-bottom: env(safe-area-inset-bottom);
     }
     @media (max-width: 680px) {
-      .wnt-wrap {
+      body {
         padding-left: max(10px, env(safe-area-inset-left));
         padding-right: max(10px, env(safe-area-inset-right));
       }
@@ -306,105 +310,111 @@
 
   /* =========== TOUCH =========== */
   @media (pointer: coarse) {
-    .wnt-wrap .wnt-article-row-main.wnt-clickable { min-height: 52px; }
-    .wnt-wrap .wnt-filters input[type="text"], .wnt-wrap .wnt-filters select { min-height: 44px; font-size: 16px; }
+    .article-row-main.clickable { min-height: 52px; }
+    .filters input[type="text"], .filters select { min-height: 44px; font-size: 16px; }
   }
 
   /* =========== PRINT =========== */
   @media print {
-    .wnt-wrap { background: #FFF5EE; padding: 0; }
-    .wnt-wrap .wnt-filters, .wnt-wrap .wnt-legend { display: none; }
-    .wnt-wrap .wnt-article-row { break-inside: avoid; }
-    .wnt-wrap .wnt-footer-nameplate { margin-top: 30px; }
+    body { background: #FFF5EE; padding: 0; }
+    .filters, .legend { display: none; }
+    .article-row { break-inside: avoid; }
+    .footer-nameplate { margin-top: 30px; }
   }
 </style>
-
-<div class="wnt-wrap">
+</head>
+<body>
 
 <!-- Winchester News nameplate -->
-<div style="background:#FFF5EE; text-align:center; padding:24px 20px 18px; margin-bottom:0; border-bottom:none;">
+<div class="nameplate-wrap" style="background:#FFF5EE; text-align:center; padding:24px 20px 18px; margin-bottom:0; border-bottom:none;">
   <a href="https://winchesternews.org" target="_blank" rel="noopener" style="text-decoration:none; display:inline-block; cursor:pointer;">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 190" style="max-width:680px; width:100%; height:auto;">
+    <!-- Overlapping squares logo -->
     <rect x="40" y="20" width="80" height="80" rx="2" fill="none" stroke="#3A7A4F" stroke-width="6"/>
     <rect x="70" y="50" width="80" height="80" rx="2" fill="none" stroke="#3A7A4F" stroke-width="6"/>
+    <!-- Fill overlap zone with shell white to show overlap -->
     <rect x="73" y="53" width="44" height="44" fill="#FFF5EE"/>
     <rect x="70" y="50" width="47" height="47" rx="2" fill="none" stroke="#3A7A4F" stroke-width="6"/>
     <rect x="40" y="20" width="80" height="80" rx="2" fill="none" stroke="#3A7A4F" stroke-width="6"/>
+    <!-- WINCHESTER NEWS text -->
     <text x="175" y="62" font-family="Georgia, 'Times New Roman', serif" font-size="52" font-weight="400" fill="#1E3A2A" letter-spacing="4">WINCHESTER</text>
     <text x="175" y="118" font-family="Georgia, 'Times New Roman', serif" font-size="52" font-weight="400" fill="#1E3A2A" letter-spacing="4">NEWS</text>
+    <!-- Tagline -->
     <text x="175" y="155" font-family="'Helvetica Neue', Arial, sans-serif" font-size="18" font-weight="400" fill="#2563B0" letter-spacing="3">A TRUSTED AND RELIABLE SOURCE OF LOCAL NEWS</text>
   </svg>
   </a>
 </div>
 
-<div class="wnt-masthead-top-wrap">
-  <div class="wnt-masthead-title">2026 Spring Annual<br>Town Meeting Warrant</div>
-  <div class="wnt-masthead-date">Monday, April 27 &middot; 7 p.m. &middot; Winchester High School Auditorium, 80 Skillings Road</div>
+<div class="masthead-top-wrap">
+  <div class="masthead-title">2026 Spring Annual<br>Town Meeting Warrant</div>
+  <div class="masthead-date">Monday, April 27 &middot; 7 p.m. &middot; Winchester High School Auditorium, 80 Skillings Road</div>
 </div>
-<div class="wnt-masthead-byline">BY WILL DOWD</div>
+<div class="masthead-byline">BY WILL DOWD</div>
 
-<div class="wnt-header">
-  <div class="wnt-header-kicker">Interactive tracker</div>
+<div class="header" style="border-bottom: 2px solid var(--black); padding-bottom: 14px; margin-bottom: 20px;">
+  <div class="header-kicker">Interactive tracker</div>
   <h1>All 46 warrant articles, explained</h1>
-  <p class="wnt-header-sub">Tap any article to see what it does, who sponsors it and why it matters. This tracker will be updated in real time before, during and after Town Meeting &mdash; bookmark it and check back.</p>
+  <p class="header-sub">Tap any article to see what it does, who sponsors it and why it matters. This tracker will be updated in real time before, during and after Town Meeting &mdash; bookmark it and check back.</p>
 </div>
 
-<div style="background:#FDF6E3;border:1px solid #FFE082;border-left:4px solid var(--wnt-gold);padding:12px 16px;margin-bottom:18px;font-size:14px;color:#5A4D35;text-align:center;line-height:1.5"><strong>Draft motion book figures (April 10, 2026):</strong> Dollar amounts shown are from an advance copy of the Select Board's motion book and are subject to change before and during Town Meeting.</div>
+<div style="background:#FDF6E3;border:1px solid #FFE082;border-left:4px solid var(--gold);padding:12px 16px;margin-bottom:18px;font-size:14px;color:#5A4D35;text-align:center;line-height:1.5"><strong>Draft motion book figures (April 10, 2026):</strong> Dollar amounts shown are from an advance copy of the Select Board's motion book and are subject to change before and during Town Meeting.</div>
 
-<div style="margin:0 0 20px; padding:14px 16px; background:var(--wnt-bg-card-hover); border:1px solid var(--wnt-border); border-left:4px solid var(--wnt-gold); font-size:14px; line-height:1.6; color:var(--wnt-text-secondary);">
-  Support the reporting behind this tracker. Winchester News is free, independent and powered entirely by readers. <a href="https://winchesternews.org/donate/" target="_blank" rel="noopener" style="color:var(--wnt-navy); font-weight:700; text-decoration:underline;">Make a donation</a> to keep local journalism going.
+
+
+<div style="margin:0 0 20px; padding:14px 16px; background:var(--bg-card-hover); border:1px solid var(--border); border-left:4px solid var(--gold); font-size:14px; line-height:1.6; color:var(--text-secondary);">
+  Support the reporting behind this tracker. Winchester News is free, independent and powered entirely by readers. <a href="https://winchesternews.org/donate/" target="_blank" rel="noopener" style="color:var(--navy); font-weight:700; text-decoration:underline;">Make a donation</a> to keep local journalism going.
 </div>
 
-<div class="wnt-rtm-callout">
-  <div class="wnt-rtm-kicker">Representative Town Meeting</div>
-  <div class="wnt-rtm-body">
+<div class="rtm-callout">
+  <div class="rtm-kicker">Representative Town Meeting</div>
+  <div class="rtm-body">
     Winchester uses a <strong>Representative Town Meeting</strong> &mdash; not an open town meeting. Only <strong>192 elected Town Meeting members</strong>, divided equally among eight precincts (24 per precinct), may make motions and vote. Any resident may attend and speak but may not vote. A quorum of <strong>100 members</strong> is required. The budget arrives against the backdrop of a <strong>failed $11.5 million Proposition 2&frac12; override</strong> on March 21 and a projected <strong>$5.1 million deficit</strong> closed through cuts, new revenue and about <strong>$3.6 million in free cash</strong>.
   </div>
 </div>
 
-<div class="wnt-stats" id="wnt-stats"></div>
+<div class="stats" id="stats"></div>
 
-<div class="wnt-key-callout">
-  <div class="wnt-key-callout-title">Badge key:</div>
-  <div class="wnt-key-grid">
-    <span class="wnt-rec-badge wnt-favorable">Favorable</span>
-    <span class="wnt-rec-badge wnt-unfavorable">Unfavorable</span>
-    <span class="wnt-rec-badge wnt-no-action">No action</span>
-    <span class="wnt-rec-badge wnt-pending">Pending</span>
+<div class="key-callout">
+  <div class="key-callout-title">Badge key:</div>
+  <div class="key-grid">
+    <span class="rec-badge favorable">Favorable</span>
+    <span class="rec-badge unfavorable">Unfavorable</span>
+    <span class="rec-badge no-action">No action</span>
+    <span class="rec-badge pending">Pending</span>
     <span style="display:inline-block;width:8px"></span>
-    <span class="wnt-result-badge wnt-passed">Passed</span>
-    <span class="wnt-result-badge wnt-failed">Failed</span>
-    <span class="wnt-result-badge wnt-amended">Amended</span>
-    <span class="wnt-result-badge wnt-withdrawn">Withdrawn</span>
-    <span class="wnt-result-badge wnt-tbd">TBD</span>
+    <span class="result-badge passed">Passed</span>
+    <span class="result-badge failed">Failed</span>
+    <span class="result-badge amended">Amended</span>
+    <span class="result-badge withdrawn">Withdrawn</span>
+    <span class="result-badge tbd">TBD</span>
   </div>
 </div>
 
 <div style="margin-bottom:10px"></div>
 
-<div style="font-size:16px;color:var(--wnt-black);font-weight:700;font-style:italic;text-align:center;margin-bottom:10px;">On a phone, rotate to landscape for the best reading experience.</div>
+<div style="font-size:16px;color:var(--black);font-weight:700;font-style:italic;text-align:center;margin-bottom:10px;">On a phone, rotate to landscape for the best reading experience.</div>
 
-<div class="wnt-filters">
-  <input type="text" id="wnt-search" placeholder="Search articles...">
-  <select id="wnt-catFilter"><option value="all" selected>All categories</option></select>
-  <select id="wnt-stakesFilter">
+<div class="filters">
+  <input type="text" id="search" placeholder="Search articles...">
+  <select id="catFilter"><option value="all" selected>All categories</option></select>
+  <select id="stakesFilter">
     <option value="all" selected>All stakes</option>
     <option value="high">High stakes only</option>
     <option value="medium">Notable</option>
     <option value="low">Routine</option>
   </select>
-  <div class="wnt-filter-count" id="wnt-filterCount"></div>
+  <div class="filter-count" id="filterCount"></div>
 </div>
 
-<div class="wnt-legend">
-  <span class="wnt-legend-title">Border key:</span>
-  <span class="wnt-legend-item"><span class="wnt-legend-bar" style="background:#1B3A5C"></span> High stakes</span>
-  <span class="wnt-legend-item"><span class="wnt-legend-bar" style="background:#B8860B"></span> Notable</span>
-  <span class="wnt-legend-item"><span class="wnt-legend-bar" style="background:#E8E2D9"></span> Routine</span>
+<div class="legend">
+  <span class="legend-title">Border key:</span>
+  <span class="legend-item"><span class="legend-bar" style="background:#1B3A5C"></span> High stakes</span>
+  <span class="legend-item"><span class="legend-bar" style="background:#B8860B"></span> Notable</span>
+  <span class="legend-item"><span class="legend-bar" style="background:#E8E2D9"></span> Routine</span>
 </div>
 
-<div class="wnt-table-wrap">
-  <div class="wnt-col-header">
+<div class="table-wrap">
+  <div class="col-header">
     <div>Article</div>
     <div>Title / key detail</div>
     <div>Category</div>
@@ -413,24 +423,22 @@
     <div>FinCom<br>rec.</div>
     <div>Town Meeting<br>vote</div>
   </div>
-  <div id="wnt-articleList"></div>
+  <div id="articleList"></div>
 </div>
 
-<div class="wnt-budget-callout">
-  <div class="wnt-budget-kicker">Post-override budget context</div>
-  <div class="wnt-budget-body">
-    Voters rejected an <strong class="wnt-navy">$11.5 million Proposition 2&frac12; override</strong> on March 21. The fiscal year 2027 budget (Article 29) closes the resulting gap with about <strong>$750,000</strong> in municipal cuts, <strong>$950,000</strong> in school-side reductions, roughly <strong>$1 million</strong> in new revenue assumptions and a <strong class="wnt-navy">$3.6 million draw on free cash</strong> &mdash; a one-time reserve that must be replenished. Comptroller Stacie A. Ward has cautioned that reserves will be tight. The Select Board is signaling a possible <strong>November override</strong> question and has directed staff to explore additional fee increases and service restructuring.
+<div class="budget-callout">
+  <div class="budget-kicker">Post-override budget context</div>
+  <div class="budget-body">
+    Voters rejected an <strong class="navy">$11.5 million Proposition 2&frac12; override</strong> on March 21. The fiscal year 2027 budget (Article 29) closes the resulting gap with about <strong>$750,000</strong> in municipal cuts, <strong>$950,000</strong> in school-side reductions, roughly <strong>$1 million</strong> in new revenue assumptions and a <strong class="navy">$3.6 million draw on free cash</strong> &mdash; a one-time reserve that must be replenished. Comptroller Stacie A. Ward has cautioned that reserves will be tight. The Select Board is signaling a possible <strong>November override</strong> question and has directed staff to explore additional fee increases and service restructuring.
   </div>
 </div>
 
-<div class="wnt-source-line">
+<div class="source-line">
   Source: 2026 Spring Annual Town Meeting Warrant &middot; Select Board meetings of March 30 and April 6, 2026 &middot; town manager reports &middot; Winchester Home Rule Charter
 </div>
 
-</div><!-- end .wnt-wrap -->
 
 <script>
-(function() {
 const articles = [
   { num: 1, title: "Town reports", cat: "Procedural", sponsor: "Select Board", vote: "Majority", key: "Annual reports received", stakes: "low", note: "Standard opener. Town Meeting hears and acts upon the reports of Town Officials, Boards, Committees and Commissions. No debate expected.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "" },
   { num: 2, title: "Declare vacant seats", cat: "Procedural", sponsor: "Committee on Rules", vote: "Majority", key: "Members who missed 50 percent or more of sessions", stakes: "low", note: "Under Article 2, Section 2.5(c) of the Home Rule Charter and Section 4.4.3 of the Code of Bylaws, Town Meeting votes to declare vacant the seats of members who failed to attend at least half of the sessions during the previous 12-month period (Spring 2024 and Fall 2024). The vacancies are then filled by precinct election.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "Indefinitely postponed" },
@@ -480,7 +488,7 @@ const articles = [
   { num: 46, title: "Town Meeting and committee reports", cat: "Procedural", sponsor: "Select Board", vote: "Majority", key: "Hear or accept reports, dissolve/authorize committees", stakes: "low", note: "Standard closing article. Town Meeting votes to hear or accept committee reports, dissolve old committees, authorize new committees or take any other related action. Often used as a catch-all for unfinished administrative business.", sbRec: "pending", rec: "pending", recBy: "FinCom", result: "tbd", resultDetail: "" , amount: "" },
 ];
 
-var categoryStyles = {
+const categoryStyles = {
   "Procedural":       { bg: "#F0EDE8", text: "#4A4A4A", border: "#E8E2D9" },
   "Bylaw":            { bg: "#EBF0F7", text: "#1B3A5C", border: "#C5D3E8" },
   "Governance":       { bg: "#F5F0E8", text: "#5A4D35", border: "#DDD4C3" },
@@ -495,140 +503,139 @@ var categoryStyles = {
   "Citizen Petition":  { bg: "#F9E8E7", text: "#C2261D", border: "#E8B4B1" },
 };
 
-var expandedSet = new Set();
-var currentCat = "all";
-var currentStakes = "all";
-var currentSearch = "";
+const expandedSet = new Set();
+let currentCat = "all";
+let currentStakes = "all";
+let currentSearch = "";
 
-function wntInit() {
-  wntBuildStats();
-  wntBuildCategoryOptions();
-  wntRender();
-  document.getElementById("wnt-search").addEventListener("input", function(e) { currentSearch = e.target.value; wntRender(); });
-  document.getElementById("wnt-catFilter").addEventListener("change", function(e) { currentCat = e.target.value; wntRender(); });
-  document.getElementById("wnt-stakesFilter").addEventListener("change", function(e) { currentStakes = e.target.value; wntRender(); });
+function init() {
+  buildStats();
+  buildCategoryOptions();
+  render();
+  document.getElementById("search").addEventListener("input", e => { currentSearch = e.target.value; render(); });
+  document.getElementById("catFilter").addEventListener("change", e => { currentCat = e.target.value; render(); });
+  document.getElementById("stakesFilter").addEventListener("change", e => { currentStakes = e.target.value; render(); });
 }
 
-function wntBuildStats() {
-  var highCount = articles.filter(function(a) { return a.stakes === "high"; }).length;
-  var superCount = articles.filter(function(a) { return a.vote !== "Majority"; }).length;
-  var petitionCount = articles.filter(function(a) { return a.cat === "Citizen Petition"; }).length;
-  var stats = [
-    { label: "Total articles", value: "46", color: "var(--wnt-black)" },
-    { label: "High stakes", value: String(highCount), color: "var(--wnt-navy)" },
-    { label: "Need supermajority", value: String(superCount), color: "var(--wnt-gold)" },
-    { label: "Citizen petitions", value: String(petitionCount), color: "var(--wnt-navy)" },
+function buildStats() {
+  const highCount = articles.filter(a => a.stakes === "high").length;
+  const superCount = articles.filter(a => a.vote !== "Majority").length;
+  const petitionCount = articles.filter(a => a.cat === "Citizen Petition").length;
+  const stats = [
+    { label: "Total articles", value: "46", color: "var(--black)" },
+    { label: "High stakes", value: String(highCount), color: "var(--navy)" },
+    { label: "Need supermajority", value: String(superCount), color: "var(--gold)" },
+    { label: "Citizen petitions", value: String(petitionCount), color: "var(--navy)" },
   ];
-  document.getElementById("wnt-stats").innerHTML = stats.map(function(s) {
-    return '<div class="wnt-stat-card"><div class="wnt-stat-value" style="color:' + s.color + '">' + s.value + '</div><div class="wnt-stat-label">' + s.label + '</div></div>';
-  }).join("");
+  document.getElementById("stats").innerHTML = stats.map(s =>
+    '<div class="stat-card"><div class="stat-value" style="color:' + s.color + '">' + s.value + '</div><div class="stat-label">' + s.label + '</div></div>'
+  ).join("");
 }
 
-function wntBuildCategoryOptions() {
-  var seen = {};
-  var cats = [];
-  articles.forEach(function(a) { if (!seen[a.cat]) { seen[a.cat] = true; cats.push(a.cat); } });
-  var sel = document.getElementById("wnt-catFilter");
-  cats.forEach(function(c) { var o = document.createElement("option"); o.value = c; o.textContent = c; sel.appendChild(o); });
+function buildCategoryOptions() {
+  const cats = [...new Set(articles.map(a => a.cat))];
+  const sel = document.getElementById("catFilter");
+  cats.forEach(c => { const o = document.createElement("option"); o.value = c; o.textContent = c; sel.appendChild(o); });
 }
 
-function wntGetFiltered() {
-  return articles.filter(function(a) {
+function getFiltered() {
+  return articles.filter(a => {
     if (currentCat !== "all" && a.cat !== currentCat) return false;
     if (currentStakes !== "all" && a.stakes !== currentStakes) return false;
     if (currentSearch) {
-      var t = currentSearch.toLowerCase();
-      return a.title.toLowerCase().indexOf(t) !== -1 || a.key.toLowerCase().indexOf(t) !== -1 ||
-             a.sponsor.toLowerCase().indexOf(t) !== -1 || (a.note && a.note.toLowerCase().indexOf(t) !== -1) || String(a.num) === t;
+      const t = currentSearch.toLowerCase();
+      return a.title.toLowerCase().includes(t) || a.key.toLowerCase().includes(t) ||
+             a.sponsor.toLowerCase().includes(t) || (a.note && a.note.toLowerCase().includes(t)) || String(a.num) === t;
     }
     return true;
   });
 }
 
-function wntBadgeHtml(type, value, detail) {
+function badgeHtml(type, value, detail) {
   if (!value || value === "tbd") {
-    var cls = type === "rec" ? "wnt-rec-badge" : "wnt-result-badge";
-    return '<span class="' + cls + ' wnt-tbd">TBD</span>';
+    var cls = type === "rec" ? "rec-badge" : "result-badge";
+    return '<span class="' + cls + ' tbd">TBD</span>';
   }
-  var cls = type === "rec" ? "wnt-rec-badge" : "wnt-result-badge";
+  var cls = type === "rec" ? "rec-badge" : "result-badge";
   var label = value === "no-action" ? "No action" : value.charAt(0).toUpperCase() + value.slice(1);
-  var h = '<span class="' + cls + " wnt-" + wntEsc(value) + '">' + wntEsc(label) + '</span>';
-  if (detail && value !== "pending") h += '<div style="font-size:9px;color:var(--wnt-text-muted);margin-top:2px">' + wntEsc(detail) + '</div>';
+  var h = '<span class="' + cls + " " + esc(value) + '">' + esc(label) + '</span>';
+  if (detail && value !== "pending") h += '<div style="font-size:9px;color:var(--text-muted);margin-top:2px">' + esc(detail) + '</div>';
   return h;
 }
 
-function wntVoteLabel(v) {
+function voteLabel(v) {
   if (v === "Two-thirds") return '\u2154 supermajority';
   if (v === "Nine-tenths") return '9/10 supermajority';
   return 'Majority';
 }
 
-function wntRender() {
-  var filtered = wntGetFiltered();
-  document.getElementById("wnt-filterCount").textContent = filtered.length + " of 46 shown";
-  var list = document.getElementById("wnt-articleList");
+function render() {
+  var filtered = getFiltered();
+  document.getElementById("filterCount").textContent = filtered.length + " of 46 shown";
+  var list = document.getElementById("articleList");
 
-  if (filtered.length === 0) { list.innerHTML = '<div class="wnt-empty-state">No articles match your filters.</div>'; return; }
+  if (filtered.length === 0) { list.innerHTML = '<div class="empty-state">No articles match your filters.</div>'; return; }
 
   list.innerHTML = filtered.map(function(a) {
     var isExp = expandedSet.has(a.num);
-    var bc = a.stakes === "high" ? "var(--wnt-navy)" : a.stakes === "medium" ? "var(--wnt-gold)" : "var(--wnt-border)";
+    var bc = a.stakes === "high" ? "var(--navy)" : a.stakes === "medium" ? "var(--gold)" : "var(--border)";
     var cs = categoryStyles[a.cat] || categoryStyles["Procedural"];
     var hasNote = !!a.note;
     var voteHtml = "";
-    if (a.vote === "Two-thirds") voteHtml = '<span class="wnt-vote-super" style="color:var(--wnt-navy)">\u2154 supermajority</span>';
-    else if (a.vote === "Nine-tenths") voteHtml = '<span class="wnt-vote-super" style="color:var(--wnt-gold)">9/10 supermajority</span>';
+    if (a.vote === "Two-thirds") voteHtml = '<span class="vote-super" style="color:var(--navy)">\u2154 supermajority</span>';
+    else if (a.vote === "Nine-tenths") voteHtml = '<span class="vote-super" style="color:var(--gold)">9/10 supermajority</span>';
     else voteHtml = "Majority";
 
     var isSuper = a.vote !== "Majority";
     var voteTag = isSuper
-      ? '<span class="wnt-vote-tag wnt-super">' + wntEsc(wntVoteLabel(a.vote)) + '</span>'
-      : '<span class="wnt-vote-tag">' + wntEsc(wntVoteLabel(a.vote)) + '</span>';
+      ? '<span class="vote-tag super">' + esc(voteLabel(a.vote)) + '</span>'
+      : '<span class="vote-tag">' + esc(voteLabel(a.vote)) + '</span>';
 
-    var h = '<div class="wnt-article-row' + (isExp ? " wnt-expanded" : "") + '" style="border-left:4px solid ' + bc + '" data-num="' + a.num + '">';
-    h += '<div class="wnt-article-row-main' + (hasNote ? " wnt-clickable" : "") + '" onclick="' + (hasNote ? "wntToggleArticle(" + a.num + ")" : "") + '">';
+    var h = '<div class="article-row' + (isExp ? " expanded" : "") + '" style="border-left:4px solid ' + bc + '" data-num="' + a.num + '">';
+    h += '<div class="article-row-main' + (hasNote ? " clickable" : "") + '" onclick="' + (hasNote ? "toggleArticle(" + a.num + ")" : "") + '">';
 
-    h += '<div class="wnt-art-num' + (a.stakes === "high" ? " wnt-high" : "") + '">' + a.num + '</div>';
+    h += '<div class="art-num' + (a.stakes === "high" ? " high" : "") + '">' + a.num + '</div>';
 
-    h += '<div class="wnt-art-title-wrap"><div class="wnt-art-title">' + wntEsc(a.title);
-    if (hasNote) h += '<span class="wnt-art-expand-hint">' + (isExp ? "\u25BE" : "\u25B8") + '</span>';
-    h += '</div><div class="wnt-art-key">' + wntEsc(a.key) + '</div></div>';
+    h += '<div class="art-title-wrap"><div class="art-title">' + esc(a.title);
+    if (hasNote) h += '<span class="art-expand-hint">' + (isExp ? "\u25BE" : "\u25B8") + '</span>';
+    h += '</div><div class="art-key">' + esc(a.key) + '</div></div>';
 
-    h += '<div class="wnt-cat-cell"><span class="wnt-cat-badge" style="background:' + cs.bg + ';color:' + cs.text + ';border:1px solid ' + cs.border + '">' + wntEsc(a.cat) + '</span></div>';
-    h += '<div class="wnt-vote-cell-wrap"><div class="wnt-vote-cell">' + voteHtml + '</div></div>';
-    h += '<div class="wnt-sb-rec-cell-wrap"><div class="wnt-rec-cell">' + wntBadgeHtml("rec", a.sbRec, "") + '</div></div>';
-    h += '<div class="wnt-rec-cell-wrap"><div class="wnt-rec-cell">' + wntBadgeHtml("rec", a.rec, a.recBy) + '</div></div>';
-    h += '<div class="wnt-result-cell-wrap"><div class="wnt-result-cell">' + wntBadgeHtml("result", a.result, a.resultDetail) + '</div></div>';
+    h += '<div class="cat-cell"><span class="cat-badge" style="background:' + cs.bg + ';color:' + cs.text + ';border:1px solid ' + cs.border + '">' + esc(a.cat) + '</span></div>';
+    h += '<div class="vote-cell-wrap"><div class="vote-cell">' + voteHtml + '</div></div>';
+    h += '<div class="sb-rec-cell-wrap"><div class="rec-cell">' + badgeHtml("rec", a.sbRec, "") + '</div></div>';
+    h += '<div class="rec-cell-wrap"><div class="rec-cell">' + badgeHtml("rec", a.rec, a.recBy) + '</div></div>';
+    h += '<div class="result-cell-wrap"><div class="result-cell">' + badgeHtml("result", a.result, a.resultDetail) + '</div></div>';
 
-    h += '<div class="wnt-mobile-badges">';
-    h += '<span class="wnt-cat-badge" style="background:' + cs.bg + ';color:' + cs.text + ';border:1px solid ' + cs.border + '">' + wntEsc(a.cat) + '</span>';
+    h += '<div class="mobile-badges">';
+    h += '<span class="cat-badge" style="background:' + cs.bg + ';color:' + cs.text + ';border:1px solid ' + cs.border + '">' + esc(a.cat) + '</span>';
     h += voteTag;
-    h += wntBadgeHtml("rec", a.sbRec, "");
-    h += wntBadgeHtml("rec", a.rec, a.recBy);
-    h += wntBadgeHtml("result", a.result, a.resultDetail);
+    h += badgeHtml("rec", a.sbRec, "");
+    h += badgeHtml("rec", a.rec, a.recBy);
+    h += badgeHtml("result", a.result, a.resultDetail);
     h += '</div>';
 
     h += '</div>';
 
     if (isExp && a.note) {
-      h += '<div class="wnt-art-detail">';
-      if (a.amount) h += '<div class="wnt-art-detail-amount"><strong>Draft motion book amount: ' + wntEsc(a.amount) + '</strong></div>';
-      h += '<div class="wnt-art-detail-text">' + wntEsc(a.note).replace(/\n/g, '<br>') + '</div>';
-      h += '<div class="wnt-art-detail-sponsor">Sponsor: ' + wntEsc(a.sponsor) + '</div></div>';
+      h += '<div class="art-detail">';
+      if (a.amount) h += '<div class="art-detail-amount"><strong>Draft motion book amount: ' + esc(a.amount) + '</strong></div>';
+      h += '<div class="art-detail-text">' + esc(a.note).replace(/\n/g, '<br>') + '</div>';
+      h += '<div class="art-detail-sponsor">Sponsor: ' + esc(a.sponsor) + '</div></div>';
     }
     h += '</div>';
     return h;
   }).join("");
 }
 
-window.wntToggleArticle = function(num) {
+function toggleArticle(num) {
   if (expandedSet.has(num)) expandedSet.delete(num);
   else expandedSet.add(num);
-  wntRender();
-};
+  render();
+}
 
-function wntEsc(s) { var d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+function esc(s) { var d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
 
-wntInit();
-})();
+init();
 </script>
+</body>
+</html>
