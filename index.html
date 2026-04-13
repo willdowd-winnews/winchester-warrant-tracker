@@ -3,7 +3,7 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-<title>2026 Town Meeting Warrant Tracker — Winchester News</title>
+<title>2026 Spring Town Meeting Warrant Tracker — Winchester News</title>
 <meta name="description" content="An interactive tracker for all 46 warrant articles at Winchester's 2026 Spring Annual Representative Town Meeting.">
 <style>
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -96,7 +96,7 @@
   .legend-bar { width: 14px; height: 3px; display: inline-block; border-radius: 1px; }
 
   /* -- Desktop table (961px+) -- */
-  .table-wrap { border: 1px solid var(--border); border-radius: 4px; overflow: hidden; background: var(--bg-card); }
+  .table-wrap { border: 1px solid var(--border); border-radius: 4px; overflow: visible; background: var(--bg-card); }
 
   .col-header {
     display: grid; grid-template-columns: 50px 1fr 120px 90px 120px 120px 110px;
@@ -104,6 +104,7 @@
     font-size: 10px; font-weight: 700;
     text-transform: uppercase; letter-spacing: 0.8px; color: #FFFFFF; gap: 10px;
     align-items: center;
+    position: sticky; top: 0; z-index: 10;
   }
   .col-header div { text-align: center; line-height: 1.3; }
 
@@ -122,6 +123,7 @@
   .art-title { font-size: 15px; font-weight: 700; color: var(--black); line-height: 1.35; padding-left: 6px; }
   .art-expand-hint { margin-left: 5px; font-size: 11px; color: var(--text-muted); font-weight: 400; }
   .art-key { font-size: 12px; color: var(--text-secondary); margin-top: 2px; font-style: italic; padding-left: 6px; }
+  .art-amount-summary { font-size: 12px; color: var(--navy); font-weight: 700; margin-top: 2px; padding-left: 6px; }
 
   .cat-cell { text-align: center; }
   .cat-badge {
@@ -225,6 +227,7 @@
     .art-title-wrap { grid-column: 2; }
     .art-title { font-size: 14px; padding-left: 0; }
     .art-key { font-size: 11px; padding-left: 0; }
+    .art-amount-summary { padding-left: 0; font-size: 11px; }
     .cat-cell, .vote-cell-wrap, .sb-rec-cell-wrap, .rec-cell-wrap, .result-cell-wrap { display: none; }
     .mobile-badges {
       display: flex; gap: 5px; flex-wrap: wrap; align-items: center;
@@ -254,7 +257,12 @@
   @media (min-width: 681px) and (max-width: 960px) {
     body { padding: 20px 16px; }
     .masthead-title { font-size: 32px; }
-    .col-header, .article-row-main {
+    .col-header {
+      grid-template-columns: 50px 1fr 120px 110px 110px 100px; gap: 10px;
+      padding-left: 12px; padding-right: 12px;
+      position: sticky; top: 0; z-index: 10;
+    }
+    .article-row-main {
       grid-template-columns: 50px 1fr 120px 110px 110px 100px; gap: 10px;
       padding-left: 12px; padding-right: 12px;
     }
@@ -337,7 +345,7 @@
 </div>
 
 <div class="masthead-top-wrap">
-  <div class="masthead-title">2026 Spring Annual<br>Town Meeting Warrant</div>
+  <div class="masthead-title">2026 Spring Town Meeting<br>Warrant Tracker</div>
   <div class="masthead-date">Monday, April 27 &middot; 7 p.m. &middot; Winchester High School Auditorium, 80 Skillings Road</div>
 </div>
 <div class="masthead-byline">BY WILL DOWD</div>
@@ -392,6 +400,7 @@
     <option value="medium">Notable</option>
     <option value="low">Routine</option>
   </select>
+  <button id="expandToggle" onclick="toggleAll()" style="padding:8px 14px; font-family:var(--font); font-size:13px; font-weight:700; background:var(--bg-card); border:1px solid var(--border); border-radius:4px; cursor:pointer; color:var(--text-secondary); white-space:nowrap;">Expand all</button>
   <div class="filter-count" id="filterCount"></div>
 </div>
 
@@ -561,6 +570,11 @@ function voteLabel(v) {
 function render() {
   var filtered = getFiltered();
   document.getElementById("filterCount").textContent = filtered.length + " of 46 shown";
+  var btn = document.getElementById('expandToggle');
+  if (btn) {
+    var allExpanded = filtered.length > 0 && filtered.every(function(a) { return expandedSet.has(a.num); });
+    btn.textContent = allExpanded ? 'Collapse all' : 'Expand all';
+  }
   var list = document.getElementById("articleList");
 
   if (filtered.length === 0) { list.innerHTML = '<div class="empty-state">No articles match your filters.</div>'; return; }
@@ -587,19 +601,20 @@ function render() {
 
     h += '<div class="art-title-wrap"><div class="art-title">' + esc(a.title);
     if (hasNote) h += '<span class="art-expand-hint">' + (isExp ? "\u25BE" : "\u25B8") + '</span>';
-    h += '</div><div class="art-key">' + esc(a.key) + '</div></div>';
+    h += '</div><div class="art-key">' + esc(a.key) + '</div>';
+    h += '</div>';
 
     h += '<div class="cat-cell"><span class="cat-badge" style="background:' + cs.bg + ';color:' + cs.text + ';border:1px solid ' + cs.border + '">' + esc(a.cat) + '</span></div>';
     h += '<div class="vote-cell-wrap"><div class="vote-cell">' + voteHtml + '</div></div>';
     h += '<div class="sb-rec-cell-wrap"><div class="rec-cell">' + badgeHtml("rec", a.sbRec, "") + '</div></div>';
-    h += '<div class="rec-cell-wrap"><div class="rec-cell">' + badgeHtml("rec", a.rec, a.recBy) + '</div></div>';
+    h += '<div class="rec-cell-wrap"><div class="rec-cell">' + badgeHtml("rec", a.rec, "") + '</div></div>';
     h += '<div class="result-cell-wrap"><div class="result-cell">' + badgeHtml("result", a.result, a.resultDetail) + '</div></div>';
 
     h += '<div class="mobile-badges">';
     h += '<span class="cat-badge" style="background:' + cs.bg + ';color:' + cs.text + ';border:1px solid ' + cs.border + '">' + esc(a.cat) + '</span>';
     h += voteTag;
     h += badgeHtml("rec", a.sbRec, "");
-    h += badgeHtml("rec", a.rec, a.recBy);
+    h += badgeHtml("rec", a.rec, "");
     h += badgeHtml("result", a.result, a.resultDetail);
     h += '</div>';
 
@@ -619,6 +634,19 @@ function render() {
 function toggleArticle(num) {
   if (expandedSet.has(num)) expandedSet.delete(num);
   else expandedSet.add(num);
+  render();
+}
+
+function toggleAll() {
+  var btn = document.getElementById('expandToggle');
+  var filtered = getFiltered();
+  if (expandedSet.size >= filtered.length) {
+    expandedSet.clear();
+    btn.textContent = 'Expand all';
+  } else {
+    filtered.forEach(function(a) { expandedSet.add(a.num); });
+    btn.textContent = 'Collapse all';
+  }
   render();
 }
 
