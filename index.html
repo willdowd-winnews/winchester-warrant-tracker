@@ -87,6 +87,12 @@
     background-position: right 10px center;
     padding-right: 28px;
   }
+  .filters button {
+    padding: 8px 12px; font-family: var(--font); font-size: 14px; font-weight: 700;
+    border: 1px solid var(--navy-mid); border-radius: 4px; background: var(--accent-light);
+    color: var(--navy); cursor: pointer; white-space: nowrap;
+  }
+  .filters button:hover { background: var(--navy-light); }
   .filter-count { font-size: 11px; color: var(--text-muted); margin-left: auto; text-align: right; }
 
   /* -- Legend -- */
@@ -209,6 +215,7 @@
     .filters { flex-direction: column; gap: 6px; }
     .filters input[type="text"] { width: 100%; min-width: 0; font-size: 16px; padding: 10px 12px; }
     .filters select { width: 100%; font-size: 16px; padding: 10px 12px; }
+    .filters button { width: 100%; min-height: 44px; font-size: 16px; }
     .filter-count { margin-left: 0; text-align: left; width: 100%; }
     .legend { gap: 10px; font-size: 10px; }
     .col-header {
@@ -390,6 +397,7 @@
     <option value="medium">Notable</option>
     <option value="low">Routine</option>
   </select>
+  <button type="button" id="expandToggle">Expand all</button>
   <div class="filter-count" id="filterCount"></div>
 </div>
 
@@ -501,6 +509,7 @@ function init() {
   document.getElementById("search").addEventListener("input", e => { currentSearch = e.target.value; render(); });
   document.getElementById("catFilter").addEventListener("change", e => { currentCat = e.target.value; render(); });
   document.getElementById("stakesFilter").addEventListener("change", e => { currentStakes = e.target.value; render(); });
+  document.getElementById("expandToggle").addEventListener("click", toggleAllArticles);
 }
 
 function buildStats() {
@@ -558,6 +567,7 @@ function voteLabel(v) {
 function render() {
   var filtered = getFiltered();
   document.getElementById("filterCount").textContent = filtered.length + " of 46 shown";
+  updateExpandToggle(filtered);
   var list = document.getElementById("articleList");
 
   if (filtered.length === 0) { list.innerHTML = '<div class="empty-state">No articles match your filters.</div>'; return; }
@@ -617,6 +627,36 @@ function toggleArticle(num) {
   if (expandedSet.has(num)) expandedSet.delete(num);
   else expandedSet.add(num);
   render();
+}
+
+function toggleAllArticles() {
+  var filtered = getFiltered().filter(function(a) { return !!a.note; });
+  if (!filtered.length) return;
+
+  var allExpanded = filtered.every(function(a) { return expandedSet.has(a.num); });
+  filtered.forEach(function(a) {
+    if (allExpanded) expandedSet.delete(a.num);
+    else expandedSet.add(a.num);
+  });
+  render();
+}
+
+function updateExpandToggle(filtered) {
+  var btn = document.getElementById("expandToggle");
+  var expandable = filtered.filter(function(a) { return !!a.note; });
+  if (!expandable.length) {
+    btn.textContent = "Expand all";
+    btn.disabled = true;
+    btn.style.opacity = "0.5";
+    btn.style.cursor = "default";
+    return;
+  }
+
+  var allExpanded = expandable.every(function(a) { return expandedSet.has(a.num); });
+  btn.textContent = allExpanded ? "Collapse all" : "Expand all";
+  btn.disabled = false;
+  btn.style.opacity = "1";
+  btn.style.cursor = "pointer";
 }
 
 function esc(s) { var d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
