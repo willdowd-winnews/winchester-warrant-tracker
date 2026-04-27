@@ -63,6 +63,16 @@
   .rtm-body { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
   .rtm-body strong { color: var(--black); }
 
+  /* -- Update box -- */
+  .update-box {
+    margin-bottom: 18px; padding: 14px 16px; background: var(--bg-card);
+    border-radius: 4px; border: 1px solid var(--border); border-left: 4px solid var(--gold);
+  }
+  .update-kicker { font-size: 10px; font-weight: 700; color: var(--gold); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1.5px; }
+  .update-body { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+  .update-body ul { margin: 8px 0 0 18px; }
+  .update-body li { margin: 4px 0; }
+
   /* -- Stats -- */
   .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
   .stat-card { background: var(--bg-card); border-radius: 4px; padding: 12px 10px; text-align: center; border: 1px solid var(--border); }
@@ -105,7 +115,7 @@
   .table-wrap { border: 1px solid var(--border); border-radius: 4px; overflow: visible; background: var(--bg-card); }
 
   .col-header {
-    display: grid; grid-template-columns: 50px 1fr 120px 90px 120px 120px 110px;
+    display: grid; grid-template-columns: 50px 1fr 120px 90px 120px 110px;
     padding: 8px 14px; background: var(--black);
     font-size: 10px; font-weight: 700;
     text-transform: uppercase; letter-spacing: 0.8px; color: #FFFFFF; gap: 10px;
@@ -118,7 +128,7 @@
   .article-row.expanded { background: var(--bg-expanded); }
 
   .article-row-main {
-    display: grid; grid-template-columns: 50px 1fr 120px 90px 120px 120px 110px;
+    display: grid; grid-template-columns: 50px 1fr 120px 90px 120px 110px;
     align-items: center; padding: 11px 14px; gap: 10px;
   }
   .article-row-main.clickable { cursor: pointer; }
@@ -269,7 +279,7 @@
     body { padding: 20px 16px; }
     .masthead-title { font-size: 32px; }
     .col-header, .article-row-main {
-      grid-template-columns: 50px 1fr 120px 110px 110px 100px; gap: 10px;
+      grid-template-columns: 50px 1fr 120px 110px 100px; gap: 10px;
       padding-left: 12px; padding-right: 12px;
     }
     .vote-cell-wrap { display: none; }
@@ -355,6 +365,22 @@
 
 <div style="background:#FDF6E3;border:1px solid #FFE082;border-left:4px solid var(--gold);padding:12px 16px;margin-bottom:18px;font-size:14px;color:#5A4D35;text-align:center;line-height:1.5"><strong>Draft motion book figures (April 10, 2026):</strong> Dollar amounts shown are from an advance copy of the Select Board's motion book and are subject to change before and during Town Meeting.</div>
 
+<div class="update-box">
+  <div class="update-kicker">Tracker updates</div>
+  <div class="update-body">
+    Updated article sections now reflect revised Town Meeting materials and late clarifications, including:
+    <ul>
+      <li>Article 4: Human Rights Commission membership and appointment structure</li>
+      <li>Article 5: revised Town Meeting rules language, including consent agenda and electronic voting provisions</li>
+      <li>Article 18: updated capital close-out totals</li>
+      <li>Article 20: clarified roof-repair borrowing rescission context</li>
+      <li>Article 28: literacy appropriation amount now filled in at $598,540</li>
+      <li>Article 33: expanded to reflect the six-motion Personnel Board package</li>
+      <li>Article 43: clarified support referenced in background materials</li>
+    </ul>
+  </div>
+</div>
+
 <div style="margin:0 0 20px; padding:14px 16px; background:var(--bg-card-hover); border:1px solid var(--border); border-left:4px solid var(--gold); font-size:14px; line-height:1.6; color:var(--text-secondary);">
   Support the reporting behind this tracker. Winchester News is free, independent and powered entirely by readers. <a href="https://winchesternews.org/donate/" target="_blank" rel="noopener" style="color:var(--navy); font-weight:700; text-decoration:underline;">Make a donation</a> to keep local journalism going.
 </div>
@@ -415,7 +441,6 @@
     <div>Category</div>
     <div>Vote<br>required</div>
     <div>Select Board<br>rec.</div>
-    <div>FinCom<br>rec.</div>
     <div>Town Meeting<br>vote</div>
   </div>
   <div id="articleList"></div>
@@ -599,14 +624,12 @@ function render() {
     h += '<div class="cat-cell"><span class="cat-badge" style="background:' + cs.bg + ';color:' + cs.text + ';border:1px solid ' + cs.border + '">' + esc(a.cat) + '</span></div>';
     h += '<div class="vote-cell-wrap"><div class="vote-cell">' + voteHtml + '</div></div>';
     h += '<div class="sb-rec-cell-wrap"><div class="rec-cell">' + badgeHtml("rec", a.sbRec, "") + '</div></div>';
-    h += '<div class="rec-cell-wrap"><div class="rec-cell">' + badgeHtml("rec", a.rec, a.recBy) + '</div></div>';
     h += '<div class="result-cell-wrap"><div class="result-cell">' + badgeHtml("result", a.result, a.resultDetail) + '</div></div>';
 
     h += '<div class="mobile-badges">';
     h += '<span class="cat-badge" style="background:' + cs.bg + ';color:' + cs.text + ';border:1px solid ' + cs.border + '">' + esc(a.cat) + '</span>';
     h += voteTag;
     h += badgeHtml("rec", a.sbRec, "");
-    h += badgeHtml("rec", a.rec, a.recBy);
     h += badgeHtml("result", a.result, a.resultDetail);
     h += '</div>';
 
