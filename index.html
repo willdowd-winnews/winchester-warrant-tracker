@@ -356,9 +356,9 @@
 
 <div class="masthead-top-wrap">
   <div class="masthead-title">2026 Spring Annual<br>Town Meeting Warrant</div>
-  <div id="tmCountdown" style="border:1px solid var(--black); padding:14px 16px; margin:14px auto 10px; text-align:center; font-family: Georgia, 'Times New Roman', serif; background:#fff; max-width:360px;">
-    <div style="font-family: Georgia, 'Times New Roman', serif; font-size:11px; font-style:italic; letter-spacing:1px; text-transform:uppercase; color:#C62828; margin-bottom:6px;">Time to gavel</div>
-    <div id="tmCountdownValue" style="font-family: Georgia, 'Times New Roman', serif; font-size:26px; font-weight:700; color:var(--black); letter-spacing:0.5px; font-variant-numeric: tabular-nums;">&mdash;</div>
+  <div id="tmCountdown" style="border:1px solid #c9c9c9; padding:18px 20px 14px; margin:16px auto 12px; text-align:center; font-family: Georgia, 'Times New Roman', serif; max-width:400px;">
+    <div style="font-family: Georgia, 'Times New Roman', serif; font-size:10px; font-style:italic; letter-spacing:3px; text-transform:uppercase; color:#C62828; margin-bottom:12px;">Time to gavel</div>
+    <div id="tmCountdownValue" style="font-family: Georgia, 'Times New Roman', serif; color:var(--black); font-variant-numeric: tabular-nums;">&mdash;</div>
   </div>
   <div class="masthead-date">Session 4 &middot; Thursday, May 7 &middot; 7 p.m. &middot; Winchester High School Auditorium, 80 Skillings Road</div>
 </div>
@@ -369,27 +369,26 @@
   var wrap = document.getElementById('tmCountdown');
   if(!el || !wrap) return;
   function pad(n){ return n < 10 ? '0' + n : '' + n; }
+  function unit(n, lbl){
+    return '<span style="display:inline-block; padding:0 12px; text-align:center; vertical-align:top;">' +
+      '<span style="display:block; font-family:Georgia, \'Times New Roman\', serif; font-size:32px; font-weight:700; line-height:1; color:#111;">' + pad(n) + '</span>' +
+      '<span style="display:block; font-family:Georgia, \'Times New Roman\', serif; font-size:9px; letter-spacing:2px; text-transform:uppercase; color:#888; margin-top:8px; font-style:italic;">' + lbl + '</span>' +
+    '</span>';
+  }
   function tick(){
     var diff = target - Date.now();
     if(diff <= 0){
-      el.textContent = 'Town Meeting in session';
-      wrap.style.background = '#C62828';
-      wrap.style.borderColor = '#C62828';
-      el.style.color = '#fff';
-      var label = wrap.firstElementChild;
-      if(label) label.style.color = '#fff';
+      el.innerHTML = '<span style="font-family:Georgia, \'Times New Roman\', serif; font-size:20px; font-style:italic; color:#C62828;">Town Meeting in session</span>';
       return;
     }
     var d = Math.floor(diff / 86400000);
     var h = Math.floor((diff % 86400000) / 3600000);
     var m = Math.floor((diff % 3600000) / 60000);
     var s = Math.floor((diff % 60000) / 1000);
-    var parts = [];
-    if(d > 0) parts.push(d + 'd');
-    parts.push(pad(h) + 'h');
-    parts.push(pad(m) + 'm');
-    parts.push(pad(s) + 's');
-    el.textContent = parts.join(' ');
+    var html = '';
+    if(d > 0) html += unit(d, 'Days');
+    html += unit(h, 'Hours') + unit(m, 'Minutes') + unit(s, 'Seconds');
+    el.innerHTML = html;
     setTimeout(tick, 1000);
   }
   tick();
