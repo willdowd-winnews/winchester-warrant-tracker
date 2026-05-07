@@ -601,6 +601,12 @@
     <option value="medium">Notable</option>
     <option value="low">Routine</option>
   </select>
+  <select id="resultFilter">
+    <option value="all" selected>All vote statuses</option>
+    <option value="tbd">Not yet voted</option>
+    <option value="passed">Passed</option>
+    <option value="failed">Failed</option>
+  </select>
   <button type="button" id="expandToggle">Expand all</button>
   <div class="filter-count" id="filterCount"></div>
 </div>
@@ -703,6 +709,7 @@ const categoryStyles = {
 const expandedSet = new Set();
 let currentCat = "all";
 let currentStakes = "all";
+let currentResult = "all";
 let currentSearch = "";
 
 function init() {
@@ -712,6 +719,7 @@ function init() {
   document.getElementById("search").addEventListener("input", e => { currentSearch = e.target.value; render(); });
   document.getElementById("catFilter").addEventListener("change", e => { currentCat = e.target.value; render(); });
   document.getElementById("stakesFilter").addEventListener("change", e => { currentStakes = e.target.value; render(); });
+  document.getElementById("resultFilter").addEventListener("change", e => { currentResult = e.target.value; render(); });
   document.getElementById("expandToggle").addEventListener("click", toggleAllArticles);
 }
 
@@ -740,6 +748,11 @@ function getFiltered() {
   return articles.filter(a => {
     if (currentCat !== "all" && a.cat !== currentCat) return false;
     if (currentStakes !== "all" && a.stakes !== currentStakes) return false;
+    if (currentResult !== "all") {
+      if (currentResult === "tbd" && a.result !== "tbd") return false;
+      if (currentResult === "passed" && a.result !== "passed" && a.result !== "amended") return false;
+      if (currentResult === "failed" && a.result !== "failed") return false;
+    }
     if (currentSearch) {
       const t = currentSearch.toLowerCase();
       return a.title.toLowerCase().includes(t) || a.key.toLowerCase().includes(t) ||
@@ -845,27 +858,4 @@ function toggleAllArticles() {
   render();
 }
 
-function updateExpandToggle(filtered) {
-  var btn = document.getElementById("expandToggle");
-  var expandable = filtered.filter(function(a) { return !!a.note; });
-  if (!expandable.length) {
-    btn.textContent = "Expand all";
-    btn.disabled = true;
-    btn.style.opacity = "0.5";
-    btn.style.cursor = "default";
-    return;
-  }
-
-  var allExpanded = expandable.every(function(a) { return expandedSet.has(a.num); });
-  btn.textContent = allExpanded ? "Collapse all" : "Expand all";
-  btn.disabled = false;
-  btn.style.opacity = "1";
-  btn.style.cursor = "pointer";
-}
-
-function esc(s) { var d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
-
-init();
-</script>
-</body>
-</html>
+function updateExpandToggle(filtered) {
