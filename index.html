@@ -356,14 +356,51 @@
 
 <div class="masthead-top-wrap">
   <div class="masthead-title">2026 Spring Annual<br>Town Meeting Warrant</div>
-  <div class="masthead-date">Session 3 &middot; Monday, May 4 &middot; 7 p.m. &middot; Winchester High School Auditorium, 80 Skillings Road</div>
+  <div id="tmCountdown" style="border-top:2px solid var(--black); border-bottom:2px solid var(--black); padding:10px 8px; margin:14px 0 10px; text-align:center; font-family:'Helvetica Neue', Arial, sans-serif;">
+    <div style="font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#C62828; margin-bottom:4px;">Time to gavel</div>
+    <div id="tmCountdownValue" style="font-size:22px; font-weight:700; color:var(--black); letter-spacing:0.5px; font-variant-numeric: tabular-nums;">&mdash;</div>
+  </div>
+  <div class="masthead-date">Session 4 &middot; Thursday, May 7 &middot; 7 p.m. &middot; Winchester High School Auditorium, 80 Skillings Road</div>
 </div>
+<script>
+(function(){
+  var target = new Date(2026, 4, 7, 19, 0, 0).getTime();
+  var el = document.getElementById('tmCountdownValue');
+  var wrap = document.getElementById('tmCountdown');
+  if(!el || !wrap) return;
+  function pad(n){ return n < 10 ? '0' + n : '' + n; }
+  function tick(){
+    var diff = target - Date.now();
+    if(diff <= 0){
+      el.textContent = 'Town Meeting in session';
+      wrap.style.background = '#C62828';
+      wrap.style.borderColor = '#C62828';
+      el.style.color = '#fff';
+      var label = wrap.firstElementChild;
+      if(label) label.style.color = '#fff';
+      return;
+    }
+    var d = Math.floor(diff / 86400000);
+    var h = Math.floor((diff % 86400000) / 3600000);
+    var m = Math.floor((diff % 3600000) / 60000);
+    var s = Math.floor((diff % 60000) / 1000);
+    var parts = [];
+    if(d > 0) parts.push(d + 'd');
+    parts.push(pad(h) + 'h');
+    parts.push(pad(m) + 'm');
+    parts.push(pad(s) + 's');
+    el.textContent = parts.join(' ');
+    setTimeout(tick, 1000);
+  }
+  tick();
+})();
+</script>
 <div class="masthead-byline">BY WILL DOWD</div>
 
 <div class="header" style="border-bottom: 2px solid var(--black); padding-bottom: 14px; margin-bottom: 20px;">
   <div class="header-kicker">Up next &middot; Session 4</div>
   <h1>Session 4 gavels in at 7 p.m. Thursday, May 7</h1>
-  <p class="header-sub">Session 4 reconvenes Thursday, May 7 at 7 p.m. at Winchester High School and is expected to take up the FY27 General Fund operating budget (Article 29) &mdash; the post-override baseline that funds every department in town &mdash; followed by the FY27 Water and Sewer and Recreation enterprise-fund budgets (Articles 30 and 31), the FY27 revolving-fund spending caps (Article 32), the Personnel Board package (Article 33), the FY27 Revenue Anticipation Notes and Chapter 90 highway-aid authorizations (Articles 36 and 37), the use of free cash and overlay to reduce the tax levy (Article 38, scheduled as the fourth order of business), and remaining citizens petitions and zoning and governance articles, including the ranked choice voting study (Article 42), the Dothan Street drain pipe petition (Article 43), the Section 7.3.19 inclusionary zoning amendment (Article 44), the EFPBC membership restructuring (Article 45) and the closing reports article (Article 46). Floor amendments, postponements and procedural motions remain possible on any of these articles. Follow the live feed below for updates, then scroll to the tracker for the status of all 46 articles.</p>
+  <p class="header-sub">Town Meeting reconvenes Thursday, May 7 at 7 p.m. at Winchester High School Auditorium for what Moderator Phil Frattaroli has signaled is meant to be the final scheduled session of the 2026 Spring Annual Town Meeting &mdash; and the night that decides how Winchester pays for itself in the year ahead.<br><br>The headline article is the <strong>FY27 General Fund operating budget</strong> (Article 29), the post-override baseline that funds every department in town and the first real test of the spending plan the Finance Committee was forced to redraw after voters rejected the override. From there, members move to the FY27 Water and Sewer and Recreation enterprise-fund budgets (Articles 30 and 31), the FY27 revolving-fund spending caps (Article 32), and the <strong>Personnel Board package</strong> (Article 33), six motions covering a 2.5 percent municipal non-union COLA, a three-year firefighter contract and a $373,988 reserve for unsettled police contracts.<br><br>Other money articles follow: the FY27 Revenue Anticipation Notes and Chapter 90 highway-aid authorizations (Articles 36 and 37) and, set as the fourth order of business, <strong>Article 38</strong> &mdash; a revised motion to use $3,264,397 from free cash and $450,000 from overlay surplus to reduce the FY27 tax levy.<br><br>Then the night turns to the citizens petitions, zoning and governance articles still on the warrant: the ranked choice voting study committee (Article 42); the <strong>Dothan Street drain pipe petition</strong> (Article 43), which would direct DPW to remove an 18-inch municipal stormwater pipe installed under an easement that expired in 2018; the Section 7.3.19 inclusionary zoning amendment (Article 44), which the sponsor has moved to indefinitely postpone; the EFPBC membership restructuring ahead of the Muraco rebuild (Article 45); and the closing reports article (Article 46).<br><br>Floor amendments, postponements and procedural motions remain possible on any of these articles. Follow the live feed below as votes happen, then scroll to the tracker for the status of all 46 articles.</p>
 </div>
 
 <div style="margin:0 0 20px; padding:14px 16px; background:var(--bg-card-hover); border:1px solid var(--border); border-left:4px solid var(--gold); font-size:14px; line-height:1.6; color:var(--text-secondary);">
