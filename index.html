@@ -858,4 +858,27 @@ function toggleAllArticles() {
   render();
 }
 
-function updateExpandToggle(filtered) {
+function updateExpandToggle(filtered) {
+  var btn = document.getElementById("expandToggle");
+  var expandable = filtered.filter(function(a) { return !!a.note; });
+  if (!expandable.length) {
+    btn.textContent = "Expand all";
+    btn.disabled = true;
+    btn.style.opacity = "0.5";
+    btn.style.cursor = "default";
+    return;
+  }
+
+  var allExpanded = expandable.every(function(a) { return expandedSet.has(a.num); });
+  btn.textContent = allExpanded ? "Collapse all" : "Expand all";
+  btn.disabled = false;
+  btn.style.opacity = "1";
+  btn.style.cursor = "pointer";
+}
+
+function esc(s) { var d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+
+init();
+</script>
+</body>
+</html>
