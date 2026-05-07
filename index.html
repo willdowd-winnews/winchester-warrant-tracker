@@ -355,45 +355,9 @@
 </div>
 
 <div class="masthead-top-wrap">
-  <div class="masthead-title">2026 Spring Annual<br>Town Meeting Warrant</div>
-  <div id="tmCountdown" style="padding:14px 20px 10px; margin:12px auto 10px; text-align:center; font-family: Georgia, 'Times New Roman', serif; max-width:400px;">
-    <div style="font-family: Georgia, 'Times New Roman', serif; font-size:10px; font-style:italic; letter-spacing:3px; text-transform:uppercase; color:#C62828; margin-bottom:12px;">Time to gavel</div>
-    <div id="tmCountdownValue" style="font-family: Georgia, 'Times New Roman', serif; color:var(--black); font-variant-numeric: tabular-nums;">&mdash;</div>
-  </div>
+  <div class="masthead-title">2026 Town Meeting in session</div>
   <div class="masthead-date">Session 4 &middot; Thursday, May 7 &middot; 7 p.m. &middot; Winchester High School Auditorium, 80 Skillings Road</div>
 </div>
-<script>
-(function(){
-  var target = new Date(2026, 4, 7, 19, 0, 0).getTime();
-  var el = document.getElementById('tmCountdownValue');
-  var wrap = document.getElementById('tmCountdown');
-  if(!el || !wrap) return;
-  function pad(n){ return n < 10 ? '0' + n : '' + n; }
-  function unit(n, lbl){
-    return '<span style="display:inline-block; padding:0 12px; text-align:center; vertical-align:top;">' +
-      '<span style="display:block; font-family:Georgia, \'Times New Roman\', serif; font-size:32px; font-weight:700; line-height:1; color:#111;">' + pad(n) + '</span>' +
-      '<span style="display:block; font-family:Georgia, \'Times New Roman\', serif; font-size:9px; letter-spacing:2px; text-transform:uppercase; color:#888; margin-top:8px; font-style:italic;">' + lbl + '</span>' +
-    '</span>';
-  }
-  function tick(){
-    var diff = target - Date.now();
-    if(diff <= 0){
-      el.innerHTML = '<span style="font-family:Georgia, \'Times New Roman\', serif; font-size:20px; font-style:italic; color:#C62828;">Town Meeting in session</span>';
-      return;
-    }
-    var d = Math.floor(diff / 86400000);
-    var h = Math.floor((diff % 86400000) / 3600000);
-    var m = Math.floor((diff % 3600000) / 60000);
-    var s = Math.floor((diff % 60000) / 1000);
-    var html = '';
-    if(d > 0) html += unit(d, 'Days');
-    html += unit(h, 'Hours') + unit(m, 'Minutes') + unit(s, 'Seconds');
-    el.innerHTML = html;
-    setTimeout(tick, 1000);
-  }
-  tick();
-})();
-</script>
 <div class="masthead-byline">BY WILL DOWD</div>
 
 <div class="header" style="border-bottom: 2px solid var(--black); padding-bottom: 14px; margin-bottom: 20px;">
